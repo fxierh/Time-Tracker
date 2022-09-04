@@ -1,0 +1,252 @@
+{% extends "header&footer.html" %}
+
+{% load filters %}
+
+{% block title_block %} <title> Dashboard </title> {% endblock %}
+
+{% block source_block %} <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script> {% endblock %}
+
+{% block body_block %}
+    <h1> Dashboard </h1>
+
+    <div class="row justify-content-evenly">
+        <div class="col-3">
+            <select class="form-select" id="chart-content-select">
+                <option value='global'> Global time distribution </option>
+                <option value='study'> Study time distribution </option>
+            </select>
+        </div>
+
+        <div class="col-2">
+            <select class="form-select" id="chart-type-select">
+                <option value='pie'> Pie chart </option>
+                <option value='doughnut'> Doughnut chart </option>
+                <option value='line'> Line chart </option>
+                <option value='area'> Area chart </option>
+                <option value='bar'> Bar chart </option>
+            </select>
+        </div>
+
+        <div class="col-4">
+            <button type="button" class="btn btn-outline-primary" id="download-chart-button"> Download chart as .png image </button>
+        </div>
+    </div>
+
+    <div class="chart-container" style="position: relative; height:400px; width:1000px">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <script>
+        /**
+         * Generate background & boarder color, using vertical axis value.
+         * @param  {number} value float between 0 and 1, both end inclusive
+         * @return {string} 'rgba(r_val, g_val, b_val, a_val)'
+         */
+        function getColor(value) {
+            const r = Math.round(255 * value)
+            const g = value > 0.5 ? Math.round((1 - value) * 510) : Math.round(510 * value)
+            const b = Math.round(255 * (1 - value))
+            return `rgba(${r}, ${g}, ${b}, ${value / 1.5})`
+        }
+
+        const data_study = {{study_time_distribution_data}}
+        const labels_study = {{study_time_distribution_labels | safe}}
+        const bg_colors_study = data_study.map(val => getColor(val))
+
+        const data_global = {{time_distribution_data}}
+        const labels_global = {{time_distribution_labels | safe}}
+        const bg_colors_global = ['red', 'rgba(0, 255, 0, 1)', 'rgba(0, 255, 0, 0.5)', 'blue']
+
+        const data = {
+            labels: labels_global,
+            datasets: [{
+                label: 'Global time distribution',
+                data: data_global,
+                backgroundColor: bg_colors_global,
+                fill: false,
+            }]
+        }
+
+        const config_pie = {
+            type: 'pie',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        }
+
+        const config_doughnut = {
+            type: 'doughnut',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        }
+
+        const config_line = {
+            type: 'line',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        }
+
+        const config_area = {
+            type: 'line',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        }
+
+        const config_bar = {
+            type: 'bar',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        }
+
+        const configs = {
+            'pie': config_pie,
+            'doughnut': config_doughnut,
+            'line': config_line,
+            'area': config_area,
+            'bar': config_bar
+        }
+
+        // Initial chart
+        let myChart = new Chart(document.getElementById("chart"), config_pie)
+
+        // DOMs
+        const chart_content_select = document.getElementById('chart-content-select')
+        chart_content_select.addEventListener('change', updateChartContent)
+        const chart_type_select = document.getElementById('chart-type-select')
+        chart_type_select.addEventListener('change', updateChartType)
+        const download_chart_button = document.getElementById('download-chart-button')
+        download_chart_button.addEventListener('click', downloadChartAsImg)
+
+        // Update chart content
+        function updateChartContent() {
+            data.datasets[0].label = chart_content_select.options[chart_content_select.selectedIndex].text
+            if (chart_content_select.value === 'global') {
+                data.datasets[0].data = data_global
+                data.labels = labels_global
+                data.datasets[0].backgroundColor = bg_colors_global
+
+                // Automatically switch to pie chart (default chart type for this case)
+                chart_type_select.value = 'pie'
+                chart_type_select.dispatchEvent(new Event('change'))
+            }
+            else if (chart_content_select.value === 'study') {
+                data.datasets[0].data = data_study
+                data.labels = labels_study
+                data.datasets[0].backgroundColor = bg_colors_study
+
+                // Automatically switch to bar chart (default chart type for this case)
+                chart_type_select.value = 'bar'
+                chart_type_select.dispatchEvent(new Event('change'))
+            }
+            // myChart.update()
+        }
+
+        // Change chart type
+        function updateChartType() {
+            myChart.destroy()
+
+            // render again according to chart type
+            data.datasets[0].fill = chart_type_select.value === 'area'
+            myChart = new Chart(document.getElementById("chart"), configs[chart_type_select.value])
+        }
+
+        // Download chart as image button
+        function downloadChartAsImg() {
+            // Create anchor tag
+            let a = document.createElement('a')
+            a.href = myChart.toBase64Image()
+
+            // Define download file name
+            a.download = `${data.datasets[0].label}.png`
+
+            // Downloaded file a
+            a.click()
+
+            // Delete element
+            a.remove()
+        }
+    </script>
+
+    <h2> Global analytics </h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> Variable </th>
+                <th> Value </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Stage count</td>
+                <td>{{user.stage_count}}</td>
+            </tr>
+            <tr>
+                <td>Day count</td>
+                <td>{{user.day_count}}</td>
+            </tr>
+            <tr>
+                <td>Session count</td>
+                <td>{{user.session_count}}</td>
+            </tr>
+            <tr>
+                <td>Subject count</td>
+                <td>{{user.subject_count}}</td>
+            </tr>
+            <tr>
+                <td>Total usable time</td>
+                <td>{{user.total_usable_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Total study time</td>
+                <td>{{user.total_study_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Total work time</td>
+                <td>{{user.total_work_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Max usable time</td>
+                <td>{{max_usable_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Max study time</td>
+                <td>{{max_study_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Max time usage percentage</td>
+                <td>{{max_time_usage_ratio | ratio2percentage}}</td>
+            </tr>
+            <tr>
+                <td>Average session time</td>
+                <td>{{user.total_study_time | divide:user.session_count | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Average day time</td>
+                <td>{{user.total_study_time | divide:user.day_count | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Time usage percentage</td>
+                <td>{{user.total_study_time | divide:user.total_usable_time | ratio2percentage}}</td>
+            </tr>
+            <tr>
+                <td>Study work ratio</td>
+                <td>{{user.total_study_time | divide:user.total_work_time | floatformat:1}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

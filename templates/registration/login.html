@@ -1,0 +1,32 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Log In </title> {% endblock %}
+
+{% block body_block %}
+    {% if form.errors %}
+        <p>Your username or password was incorrect. Try again.</p>
+    {% endif %}
+
+    {% if next %}
+        {% if user.is_authenticated %}
+            <p>You don't have permission for this page</p>
+
+        {% else %}
+            <p>Please login to see this page</p>
+        {% endif %}
+    {% endif %}
+
+    <form method='post' action="{% url 'login' %}">
+        {% csrf_token %}
+        {{form.username.label_tag}}
+        {{form.username}}
+
+        {{form.password.label_tag}}
+        {{form.password}}
+        <input type="submit" value='login'>
+        <input type="hidden" name='next' value="{{next}}">
+    </form>
+
+    <br>
+    <p> Password forgotten ? <a href="{% url 'password_reset' %}"> Reset your password </a> </p>
+{% endblock %}

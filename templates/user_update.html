@@ -1,0 +1,15 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Update User Info </title> {% endblock %}
+
+{% block body_block %}
+    <h1> Profile </h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Submit">
+    </form>
+
+    <br>
+    <a href="{% url 'password_change' %}"> Change password </a>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "header&footer.html" %}
+
+{% load filters %}
+
+{% block title_block %} <title> Subject List </title> {% endblock %}
+
+{% block source_block %}
+    {# jquery #}
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    {# DataTables #}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+{% endblock %}
+
+{% block body_block %}
+    <table id="subject_table" class="display">
+        <thead>
+            <tr>
+                <th> Name </th>
+                <th> Total study time </th>
+                <th> Session count </th>
+                <th> Average session time </th>
+                <th> Portals </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subject_list %}
+            <tr>
+                <td><a href="/classic_tracker/subject/{{subject.id}}">{{ subject.name }}</a></td>
+                <td>{{ subject.total_study_time | sec2hourmin }}</td>
+                <td>{{ subject.session_count }}</td>
+                <td>{{ subject.total_study_time | divide:subject.session_count | sec2hourmin }}</td>
+                <td>
+                    <a href="/classic_tracker/update_subject/{{subject.id}}">UPDATE</a>
+                    <a href="/classic_tracker/delete_subject/{{subject.id}}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        let csrf_token = '{{ csrf_token }}';
+
+        {# Rendering of subject table #}
+        $(document).ready(function () {
+            $('#subject_table').DataTable({
+                "order": [],
+                'columnDefs': [ {
+                    {# The 4th column #}
+                    'targets': [4],
+                    {# Disable sorting #}
+                    'orderable': false,
+                 }]
+            });
+        });
+    </script>
+
+    <div>
+        {# The refresh function is defined in assets.js #}
+        <button type="button" class="btn btn-outline-primary" onclick="refresh()"> Refresh </button>
+    </div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "header&footer.html" %}
+
+{% load filters %}
+
+{% block title_block %} <title> Stage List </title> {% endblock %}
+
+{% block source_block %}
+    {# jquery #}
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    {# DataTables #}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+{% endblock %}
+
+{% block body_block %}
+    <table id="stage_table" class="display">
+        <thead>
+            <tr>
+                <th> Name </th>
+                <th> # Day </th>
+                <th> # Session </th>
+                <th> Total work time </th>
+                <th> Total usable time </th>
+                <th> Total study time </th>
+                <th> Average time usage </th>
+                <th> Max work time </th>
+                <th> Max usable time </th>
+                <th> Max study time </th>
+                <th> Max time usage </th>
+                <th> Portals </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stage in stage_list %}
+            <tr>
+                <td><a href="{% url 'classic_tracker:list_day' %}?stage={{stage.id}}">{{ stage.name }}</a></td>
+                <td>{{ stage.day_count }}</td>
+                <td>{{ stage.session_count }}</td>
+                <td>{{ stage.total_work_time | sec2hourmin }}</td>
+                <td>{{ stage.total_usable_time | sec2hourmin }}</td>
+                <td>{{ stage.total_study_time | sec2hourmin }}</td>
+                <td>{{ stage.time_usage_ratio | ratio2percentage }}</td>
+                <td>{{ stage.max_work_time | sec2hourmin }}</td>
+                <td>{{ stage.max_usable_time | sec2hourmin }}</td>
+                <td>{{ stage.max_study_time | sec2hourmin }}</td>
+                <td>{{ stage.max_time_usage_ratio | ratio2percentage }}</td>
+                <td>
+                    <a href="/classic_tracker/update_stage/{{stage.id}}">UPDATE</a>
+                    <a href="/classic_tracker/delete_stage/{{stage.id}}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        let csrf_token = '{{ csrf_token }}';
+
+        {# Rendering of stage table #}
+        $(document).ready(function () {
+            $('#stage_table').DataTable({
+                scrollX: true,
+                'order': [],
+                'columnDefs': [ {
+                    {# The last column #}
+                    'targets': [-1],
+                    {# Disable sorting #}
+                    'orderable': false,
+                 }]
+            });
+        });
+    </script>
+
+    <div>
+        {# The refresh function is defined in assets.js #}
+        <button type="button" class="btn btn-outline-primary" onclick="refresh()"> Refresh </button>
+    </div>
+{% endblock %}

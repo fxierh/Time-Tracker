@@ -1,0 +1,126 @@
+{% extends "header&footer.html" %}
+{% load filters %}
+
+{% block title_block %} <title> Session List </title> {% endblock %}
+
+{% block body_block %}
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <button type="button" class="btn btn-light" id="button-day">
+                        Date
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-light" id="button-day-of-week">
+                        DoW
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-light" id="button-subject">
+                        Subject
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-light" id="button-start-time">
+                        Start time
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-light" id="button-end-time">
+                        End time
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-light" id="button-duration">
+                        Duration
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"></path>
+                        </svg>
+                    </button>
+                </th>
+                <th><button type="button" class="btn btn-light">Portals</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in session_list %}
+            <tr>
+                <td>{{ session.date }}</td>
+                <td class="day-of-week">{{ session.day_of_week }}</td>
+                <td>{{ session.name_subject }}</td>
+                <td>{{ session.start }}</td>
+                <td>{% if session.end %} {{session.end}} {% if session.end_next_day %} (next day) {% endif %} {% endif %}</td>
+                <td>{{ session.duration | sec2hourmin }}</td>
+                <td>
+                    <a href="/classic_tracker/update_session/{{session.id}}">UPDATE</a>
+                    <a href="/classic_tracker/delete_session/{{session.id}}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {# Pagination link bar#}
+    <nav>
+        <ul class="pagination" id="pagination-ul">
+            {# To complete with JS #}
+        </ul>
+    </nav>
+
+    <script>
+        {# Sorting buttons #}
+        button_sort_by_day = document.getElementById("button-day");
+        button_sort_by_day.addEventListener('click', function(){sort_by('day');});
+
+        button_day_of_week = document.getElementById("button-day-of-week");
+        button_day_of_week.addEventListener('click', function(){sort_by('day_of_week');});
+
+        button_subject = document.getElementById("button-subject");
+        button_subject.addEventListener('click', function(){sort_by('name_subject');});
+
+        button_start_time = document.getElementById("button-start-time");
+        button_start_time.addEventListener('click', function(){sort_by('start');});
+
+        button_end_time = document.getElementById("button-end-time");
+        button_end_time.addEventListener('click', function(){sort_by('end');});
+
+        button_duration = document.getElementById("button-duration");
+        button_duration.addEventListener('click', function(){sort_by('duration');});
+
+        {# Parse query string #}
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        let current_page = parseInt(Object.fromEntries(urlSearchParams.entries())['page']) || 1;
+        let href = new URL(window.location);
+
+        const total_nb_pages = {{ page_obj.paginator.num_pages }};
+        const pagination_ul = document.getElementById("pagination-ul");
+
+        window.onload = function() {
+            {# Convert day of week numbers to strings #}
+            const day_of_week_cells = document.querySelectorAll('.day-of-week');
+            day_of_week_cells.forEach(cell => {
+                cell.textContent = day_of_week_lookup[cell.textContent];
+            });
+
+            {# Generate pagination section. The pagination function is defined in assets.js #}
+            pagination();
+        };
+    </script>
+
+{% endblock %}

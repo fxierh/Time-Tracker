@@ -1,0 +1,8 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Logged Out </title> {% endblock %}
+
+{% block body_block %}
+    <p>You have been logged out!</p>
+    <a href="{% url 'login' %}">Click Here to Login!</a>
+{% endblock %}

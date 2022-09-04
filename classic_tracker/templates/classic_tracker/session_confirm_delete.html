@@ -1,0 +1,12 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Delete Session </title> {% endblock %}
+
+{% block body_block %}
+    <h1>Are you sure you want to delete {{session}}?</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Confirm DELETE">
+    </form>
+{% endblock %}

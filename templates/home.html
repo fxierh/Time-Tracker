@@ -1,0 +1,101 @@
+{% extends "header&footer.html" %}
+{% load static %}
+
+{% block title_block %} <title> Home </title> {% endblock %}
+
+{% block body_block %}
+    <h1>Project home</h1>
+
+    <h2>Analytics</h2>
+    <div class="accordion accordion-flush">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="line-count-accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#line-count-accordion-body" aria-expanded="true" aria-controls="line-count-accordion-body">
+                    Number of lines of code
+                </button>
+            </h2>
+            <div id="line-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="line-count-accordion-header">
+                <div class="accordion-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td>Front-end</td>
+                                <td>{{ frontend_line_count }}</td>
+                            </tr>
+                            <tr>
+                                <td>Back-end</td>
+                                <td>{{ backend_line_count }}</td>
+                            </tr>
+                            <tr>
+                                <td>Testing</td>
+                                <td>{{ test_line_count }}</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td>Total</td>
+                                <td>{{ frontend_line_count | add:backend_line_count | add:test_line_count }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+         <div class="accordion-item">
+             <h2 class="accordion-header" id="test-count-accordion-header">
+                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#test-count-accordion-body" aria-expanded="true" aria-controls="test-count-accordion-body">
+                    Number of test cases
+                 </button>
+             </h2>
+             <div id="test-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="test-count-accordion-header">
+                 <div class="accordion-body">
+                     Models & views & forms: {{ test_case_count }}
+                 </div>
+             </div>
+         </div>
+    </div>
+
+    <h2>Tech stack</h2>
+    <h3>Front-end</h3>
+        <img src="{% static 'classic_tracker/Icons/HTML5.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/CSS3.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/Bootstrap.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/JS.svg' %}" alt="Icon not available" height="60">
+        <a href="https://www.chartjs.org/">
+            <img src="{% static 'classic_tracker/Icons/ChartJS.svg' %}" alt="Icon not available" height="60">
+        </a>
+        <a href="https://datatables.net/">
+            <img src="{% static 'classic_tracker/Icons/Datatables.png' %}" alt="Icon not available" height="60">
+        </a>
+        <img src="{% static 'classic_tracker/Icons/Jinja.svg' %}" alt="Icon not available" height="60">
+        <hr>
+
+    <h3>Back-end</h3>
+        <img src="{% static 'classic_tracker/Icons/Python.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/Django.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/Bash.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/MySQL.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/Redis.svg' %}" alt="Icon not available" height="60">
+        <hr>
+
+    <h3>Versioning</h3>
+        <img src="{% static 'classic_tracker/Icons/Git.svg' %}" alt="Icon not available" height="60">
+        <img src="{% static 'classic_tracker/Icons/Github.svg' %}" alt="Icon not available" height="60">
+        <hr>
+
+    <h3>Cloud</h3>
+        <img src="{% static 'classic_tracker/Icons/AWS.svg' %}" alt="Icon not available" height="60">
+        <p>
+            Service including: Amazon SES, ...
+        </p>
+
+{#    <script>#}
+{#        window.onload = function() {#}
+            {# Set height attribute of each image tag #}
+{#            const day_of_week_cells = document.querySelectorAll('img');#}
+{#            day_of_week_cells.forEach(cell => {#}
+{#                cell.setAttribute('height', '60');#}
+{#            });#}
+{#        };#}
+{#    </script>#}
+
+{% endblock %}

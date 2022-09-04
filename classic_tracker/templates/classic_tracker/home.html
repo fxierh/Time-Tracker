@@ -1,0 +1,56 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Classic Tracker </title> {% endblock %}
+
+{% block body_block %}
+    <h1> Classic tracker </h1>
+
+    <p> Guide: </p>
+    <ol>
+        <li> <a href="{% url 'classic_tracker:create_stage' %}"> Create stage </a> </li>
+        <li> <a href="{% url 'classic_tracker:create_day' %}"> Create day </a> </li>
+        <li> <a href="{% url 'classic_tracker:create_subject' %}"> Create subject </a> </li>
+        <li> <a href="{% url 'classic_tracker:create_session' %}"> Create session </a> </li>
+    </ol>
+
+    <p> Rules: </p>
+    <ul>
+        <li> A stage contains multiple days, while a day belongs to one single stage. </li>
+            <ul>
+                <li> When a stage is deleted, all days belongs to it are deleted as well. </li>
+                <li> Total usable time of stage = sum of usable time of days belonging to the stage </li>
+                <li> Total study time of stage = sum of study time of days belonging to the stage </li>
+                <li> Time usage ratio of stage (0 - 1) = total study time of stage / total usable time of stage </li>
+            </ul>
+        <li> A day contains multiple sessions, while a session belongs to one single day. </li>
+            <ul>
+                <li> When a day is deleted, all sessions belongs to it are deleted as well. </li>
+                <li> Worktime of day = time spent inevitably for education/living purpose (contrary to personal growth) </li>
+                <li> Start time of day = the time you get up </li>
+                <li> End time of day = the time you go to bed, which may surpass midnight </li>
+                <li> Usable time of day = end time of day - start time of day - worktime of day </li>
+                <li> Study time of day = sum of duration of sessions belonging to the day </li>
+                <li> Time usage ratio of day (0 - 1) = study time of day / usable time of day </li>
+            </ul>
+        <li> A session belongs to one single day, and one single subject. </li>
+            <ul>
+                <li> Start time of session = the time you start learning </li>
+                <li> End time of session = the time you stop learning </li>
+                <li> Duration of session = end time of session - start time of session </li>
+            </ul>
+        <li> A subject contains multiple sessions, while a session belongs to one single subject. </li>
+            <ul>
+                <li> When a subject is deleted, all sessions belongs to it are deleted as well. </li>
+                <li> Total study time of subject = sum of duration of sessions belonging to the subject </li>
+            </ul>
+    </ul>
+
+    <a href="{% url 'classic_tracker:list_stage' %}"> My stages </a><br>
+
+    <a href="{% url 'classic_tracker:list_day' %}"> My days </a><br>
+
+    <a href="{% url 'classic_tracker:list_subject' %}"> My subjects </a><br>
+
+    <a href="{% url 'classic_tracker:list_session' %}"> My sessions </a><br>
+
+{% endblock %}

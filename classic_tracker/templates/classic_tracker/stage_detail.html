@@ -1,0 +1,142 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Stage Detail </title> {% endblock %}
+
+{% block body_block %}
+    <h1> {{stage}} </h1>
+
+    <h2> Detail information: </h2>
+    <ul>
+        <li> Description: {{stage.description}} </li>
+        <li> Total work time: {{total_work_time}} </li>
+        <li> Total usable time: {{total_usable_time}} </li>
+        <li> Max usable time: {{max_usable_time}} </li>
+        <li> Average usable time: {{avg_usable_time}} </li>
+        <li> Total day study time: {{total_study_time}} </li>
+        <li> Max day study time: {{max_study_time}} </li>
+        <li> Average day study time: {{avg_study_time}} </li>
+        <li> Average session time: {{avg_session_time}} </li>
+        <li> Day count: {{stage.day_count}} </li>
+        <li> Session count: {{stage.session_count}} </li>
+        <li> Average # session per day: {{avg_session_per_day | floatformat}} </li>
+        <li> Global time usage percentage: {{time_usage_percentage}}% </li>
+        <li> Max time usage percentage: {{max_time_usage_percentage}}% </li>
+    </ul>
+
+    <h2> Days: </h2>
+    <ul>
+    {% for day in days %}
+        <li>
+            <a href="/classic_tracker/day/{{day.id}}"> {{day}} </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    {# Pagination link bar#}
+    <nav>
+        <ul class="pagination" id="pagination-ul">
+            {# To complete with JS #}
+        </ul>
+    </nav>
+
+    <script>
+        {# Parse query string #}
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        let current_page = parseInt(Object.fromEntries(urlSearchParams.entries())['page']) || 1;
+
+        let total_nb_pages = {{ total_nb_pages }};
+        const pagination_ul = document.getElementById("pagination-ul");
+
+        /**
+         * Returns a li tag which displays a << sign and contains a link to the previous page.
+         * The tag is disabled when there is no previous page.
+         */
+        function get_previous_li() {
+            const previous_li = document.createElement('li');
+            previous_li.classList.add('page-item');
+            if (current_page === 1) {
+                previous_li.classList.add('disabled');
+            }
+
+            const anchor_tag = document.createElement('a');
+            anchor_tag.classList.add('page-link');
+            anchor_tag.setAttribute('href', `{% url 'classic_tracker:detail_stage' pk=stage.id %}?page=${current_page-1}`);
+            anchor_tag.setAttribute('aria-label', 'Previous');
+
+            const span_tag = document.createElement('span');
+            span_tag.setAttribute('aria-hidden', 'true');
+            span_tag.innerText = '«';
+
+            anchor_tag.appendChild(span_tag);
+            previous_li.appendChild(anchor_tag);
+            return previous_li;
+        }
+
+        /**
+         * Returns a li tag which displays a >> sign and contains a link to the next page.
+         * The tag is disabled when there is no next page.
+         */
+        function get_next_li() {
+            const next_li = document.createElement('li');
+            next_li.classList.add('page-item');
+            if (current_page === total_nb_pages) {
+                next_li.classList.add('disabled');
+            }
+
+            const anchor_tag = document.createElement('a');
+            anchor_tag.classList.add('page-link');
+            anchor_tag.setAttribute('href', `{% url 'classic_tracker:detail_stage' pk=stage.id %}?page=${current_page+1}`);
+            anchor_tag.setAttribute('aria-label', 'Next');
+
+            const span_tag = document.createElement('span');
+            span_tag.setAttribute('aria-hidden', 'true');
+            span_tag.innerText = '»';
+
+            anchor_tag.appendChild(span_tag);
+            next_li.appendChild(anchor_tag);
+            return next_li;
+        }
+
+        /**
+         * Returns a li tag which displays a page number and contains a link to the corresponding page.
+         * The tag is highlighted if it is linking to the current page.
+         * @param: {number} page_nb
+         */
+        function get_page_li(page_nb) {
+            const page_li = document.createElement('li');
+            page_li.classList.add('page-item');
+            if (current_page === page_nb) {
+                page_li.classList.add('active');
+            }
+            page_li.setAttribute('aria-current', 'page');
+
+            const anchor_tag = document.createElement('a');
+            anchor_tag.classList.add('page-link');
+            anchor_tag.setAttribute('href', `{% url 'classic_tracker:detail_stage' pk=stage.id %}?page=${page_nb}`);
+            anchor_tag.innerText = page_nb
+
+
+            page_li.appendChild(anchor_tag);
+            return page_li;
+        }
+
+        /**
+         * Generates the entire pagination section.
+         */
+        function pagination() {
+            pagination_ul.appendChild(get_previous_li());
+            if (total_nb_pages < 7) {
+                {# << Link to all pages >> #}
+                for (let page = 1; page <= total_nb_pages; page++) {
+                    pagination_ul.appendChild(get_page_li(page));
+                }
+            } else {
+                {# << 1 ... x-1 x x+1 ... end >> #}
+            }
+            pagination_ul.appendChild(get_next_li());
+        }
+
+        window.onload = function() {pagination()};
+    </script>
+
+{% endblock %}
