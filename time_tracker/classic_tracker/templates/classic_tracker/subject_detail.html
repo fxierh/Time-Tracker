@@ -1,0 +1,26 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Subject Detail </title> {% endblock %}
+
+{% block body_block %}
+    <h1> {{subject}} </h1>
+
+    <h2> Detail information: </h2>
+    <ul>
+        <li> Description: {{subject.description}} </li>
+        <li> Total study time: {{total_study_time}} </li>
+        <li> Session count: {{subject.session_count}} </li>
+        <li> Average session time: {{avg_session_time}} </li>
+        <li> Comment: {{ subject.comment }} </li>
+    </ul>
+
+    <h2> Sessions: </h2>
+    <ul>
+    {% for session in sessions %}
+        <li>
+            <a href="/classic_tracker/session/{{session.id}}"> {{session}} </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

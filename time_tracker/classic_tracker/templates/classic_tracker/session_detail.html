@@ -1,0 +1,16 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Session Detail </title> {% endblock %}
+
+{% block body_block %}
+    <h1> {{session}} </h1>
+
+    <h2> Detail information: </h2>
+    <ul>
+        <li> Day: {{session.day}} </li>
+        <li> Subject: {{session.subject}} </li>
+        <li> Session start: {{session.start}} </li>
+        <li> Session end: {% if session.end %} {{session.end}} {% if session.end_next_day %} of the next day {% endif %} {% endif %} </li>
+        <li> Duration (h): {{duration}} </li>
+    </ul>
+{% endblock %}

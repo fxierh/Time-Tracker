@@ -1,0 +1,131 @@
+{% extends "header&footer.html" %}
+
+{% load cache %}
+{% load static %}
+
+{% block title_block %} <title> About </title> {% endblock %}
+
+{% block body_block %}
+{% cache 86400 about %}
+
+    <h2>Introduction</h2>
+    <p>
+        Time tracker is a lightweight web application with low latency and has support for desktop & mobile devices.
+        It is open-sourced under Apache 2.0 license and is completely free.
+        Checkout the source code <a href="https://github.com/fxie520/Time-Tracker" data-bs-toggle="tooltip" data-bs-title="Star me on GitHub &#10084; !">here</a>.
+    </p>
+
+    <h2>Statistics</h2>
+    <div class="accordion accordion-flush">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="line-count-accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#line-count-accordion-body" aria-expanded="true" aria-controls="line-count-accordion-body">
+                    Number of lines of code
+                </button>
+            </h2>
+            <div id="line-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="line-count-accordion-header">
+                <div class="accordion-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="w-50">Front-end</td>
+                                <td>{{ frontend_line_count }}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-50">Back-end</td>
+                                <td>{{ backend_line_count }}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-50">Testing</td>
+                                <td>{{ test_line_count }}</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td class="w-50">Total</td>
+                                <td>{{ frontend_line_count | add:backend_line_count | add:test_line_count }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+         <div class="accordion-item">
+             <h2 class="accordion-header" id="test-count-accordion-header">
+                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#test-count-accordion-body" aria-expanded="true" aria-controls="test-count-accordion-body">
+                    Number of test cases
+                 </button>
+             </h2>
+             <div id="test-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="test-count-accordion-header">
+                 <div class="accordion-body">
+                     <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="w-50">Models + views + forms</td>
+                                <td>{{ test_case_count }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                 </div>
+             </div>
+         </div>
+    </div>
+
+    <h2>Tech stack</h2>
+    <table class="table table-borderless table-striped">
+        <tbody>
+            <tr>
+                <td class="w-50 align-middle">Front-end</td>
+                <td>
+                    <img src="{% static 'classic_tracker/Icons/HTML5.svg' %}" alt="HTML5 Logo" height="60" data-bs-toggle="tooltip" data-bs-title="HTML5">
+                    <img src="{% static 'classic_tracker/Icons/CSS3.svg' %}" alt="CSS Logo" height="60" data-bs-toggle="tooltip" data-bs-title="CSS3">
+                    <img src="{% static 'classic_tracker/Icons/Bootstrap.svg' %}" alt="Bootstrap Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Bootstrap 5">
+                    <img src="{% static 'classic_tracker/Icons/JS.svg' %}" alt="JavaScript Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Javascript">
+                    {# "text-decoration: none" is used to suppress the small horizontal bar near icon #}
+                    <a href="https://www.chartjs.org/" style="text-decoration: none;">
+                        <img src="{% static 'classic_tracker/Icons/ChartJS.svg' %}" alt="Chart.JS Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Chart.js">
+                    </a>
+                    <a href="https://datatables.net/" style="text-decoration: none;">
+                        <img src="{% static 'classic_tracker/Icons/Datatables.png' %}" alt="Datatables Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Datatables">
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td class="w-50 align-middle">Back-end</td>
+                <td>
+                    <img src="{% static 'classic_tracker/Icons/Python.svg' %}" alt="Python Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Python 3.10">
+                    <img src="{% static 'classic_tracker/Icons/Django.svg' %}" alt="Django Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Django 4.1 + Django Debug Toolbar">
+                    <img src="{% static 'classic_tracker/Icons/Bash.svg' %}" alt="Bash Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Bash">
+                    <img src="{% static 'classic_tracker/Icons/MySQL_no_text.svg' %}" alt="MySQL Logo" height="60" data-bs-toggle="tooltip" data-bs-title="MySQL">
+                    <img src="{% static 'classic_tracker/Icons/Redis_no_text.svg' %}" alt="Redis Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Redis">
+                </td>
+            </tr>
+            <tr>
+                <td class="w-50 align-middle">Deployment</td>
+                <td>
+                    <img src="{% static 'classic_tracker/Icons/AWS.svg' %}" alt="AWS Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Amazon SES + RDS + EC2 + ElastiCache">
+                    <img src="{% static 'classic_tracker/Icons/Apache.svg' %}" alt="Apache Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Apache 2.4 + mod-wsgi">
+                    <img src="{% static 'classic_tracker/Icons/Git_no_text.svg' %}" alt="Git Logo" height="60" data-bs-toggle="tooltip" data-bs-title="Git">
+                    <img src="{% static 'classic_tracker/Icons/Github.svg' %}" alt="GitHub Logo" height="60" data-bs-toggle="tooltip" data-bs-title="GitHub CD/CI">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        {# Initialize Bootstrap tooltips #}
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+
+{#    <script>#}
+{#        window.onload = function() {#}
+            {# Set height attribute of each image tag #}
+{#            const day_of_week_cells = document.querySelectorAll('img');#}
+{#            day_of_week_cells.forEach(cell => {#}
+{#                cell.setAttribute('height', '60');#}
+{#            });#}
+{#        };#}
+{#    </script>#}
+
+{% endcache %}
+{% endblock %}

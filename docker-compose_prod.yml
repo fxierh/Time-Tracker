@@ -1,0 +1,42 @@
+# Docker compose file for production
+
+version: '3.9'
+
+services:
+
+  django:
+    container_name: django
+    build:
+      context: ./time_tracker
+      dockerfile: Dockerfile_prod
+    volumes:
+      - /var/log/gunicorn:/home/time_tracker/log
+      - /home/time_tracker/venv
+      - static:/home/time_tracker/static_root  # Named volume shared with the nginx container
+    env_file:
+      - /home/ec2-user/Time-Tracker/env/prod.env  # This file is built using GitHub secrets
+    command:
+      - bash
+      - -c
+      - |
+        python3.10 manage.py migrate
+        python3.10 manage.py collectstatic --no-input
+        gunicorn -c gunicorn_conf.py time_tracker.wsgi
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile_prod
+    volumes:
+      - /var/log/nginx:/var/log/nginx
+      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
+      - static:/static  # Named volume shared with the django container
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - django
+
+volumes:
+  static:

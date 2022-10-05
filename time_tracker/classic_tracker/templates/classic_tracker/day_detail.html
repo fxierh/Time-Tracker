@@ -1,0 +1,30 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Day Detail </title> {% endblock %}
+
+{% block body_block %}
+    <h1> {{day}} </h1>
+
+    <h2> Detail information: </h2>
+    <ul>
+        <li> Stage: {{day.stage}} </li>
+        <li> Worktime: {{work_time}} </li>
+        <li> Session count: {{day.session_count}} </li>
+        <li> Day start: {{day.start}} </li>
+        <li> Day end: {% if day.end %} {{day.end}} {% if day.end_next_day %} of the next day {% endif %} {% endif %} </li>
+        <li> Usable time: {{usable_time}} </li>
+        <li> Study time: {{study_time}} </li>
+        <li> Time usage percentage: {{time_usage_percentage}}%</li>
+        <li> Comment: {{ day.comment }} </li>
+    </ul>
+
+    <h2> Sessions: </h2>
+    <ul>
+    {% for session in sessions %}
+        <li>
+            <a href="/classic_tracker/session/{{session.id}}"> {{session}} </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

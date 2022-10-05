@@ -1,0 +1,24 @@
+# Storage files
+__pycache__/
+.DS_Store
+.idea/
+
+# Legacy files
+Legacy/
+
+# Result of collectstatic
+static_root/
+
+# Python interpreters
+Interpreter/
+venv/
+
+# Sensitive data
+environment_variables.py
+*.pem
+dkim-dns-records.csv
+AWS_info.txt
+
+# Docker
+Dockerfile*
+.dockerignore

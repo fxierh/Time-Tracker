@@ -1,0 +1,106 @@
+{% extends "header&footer.html" %}
+
+{% load cache %}
+{% load static %}
+
+{% block title_block %} <title> Time Tracker | 100% Free | No Ads </title> {% endblock %}
+{% block source_block %}
+    <link rel="stylesheet" type="text/css" href="{% static 'third_party/Magnifier.js/magnifier.css' %}">
+    <script type="text/javascript" src="{% static 'third_party/Magnifier.js/Magnifier.js' %}"></script>
+    <script type="text/javascript" src="{% static 'third_party/Magnifier.js/Event.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <h1>Project home</h1>
+
+    <h2>Quick Demo</h2>
+    <p class="mb-1">Wanna take a tour without registration ? Feel free to</p>
+    <form method="post" action="{% url 'login' %}" autocomplete="off">
+        {% csrf_token %}
+        <div>
+            <input type="hidden" name="username" readonly id="id_username" value="visitor">
+        </div>
+        <div>
+            <input type="hidden" name="password" readonly id="id_password" value="visitor_123456">
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+            <input type="submit" value="Log in as visitor" class="btn btn-outline-primary col-6 col-md-5 col-lg-4 col-xl-3 disabled">
+            {% else %}
+            <input type="submit" value="Log in as visitor" class="btn btn-outline-primary col-6 col-md-5 col-lg-4 col-xl-3">
+            {% endif %}
+        </div>
+    </form>
+    <p><em>Please do not delete this account, as others may need to use it. </em></p>
+
+{% cache 86400 project_home %}
+    <h2>Introduction</h2>
+    <p>Time Tracker is completely <em>free</em> and <em>open-sourced</em>. </p>
+    <p>It is designed to keep track of one's disposable time (contrary to periods of time that one has no control on, like time at work or at school etc.) by organizes a user's time as follows:</p>
+    <ul>
+        <li> A stage contains multiple days, while a day belongs to one single stage. </li>
+        <li> A day contains multiple sessions, while a session belongs to one single day. </li>
+        <li> A session belongs to one single day, and one single subject. </li>
+        <li> A subject contains multiple sessions, while a session belongs to one single subject. </li>
+    </ul>
+    <figure style="text-align: center">
+        <img id="thumb" alt="Image not available" src="{% static 'Time_organization.png' %}" data-large-img-url="{% static 'Time_organization_bg_non_transparent.png' %}" style="max-width: 100%" />
+        <figcaption>Organization of a user's time</figcaption>
+    </figure>
+    <p>
+        Time Tracker automatically generates your per-stage, per-subject & per-day statistics,
+        which can be used to extract meaningful insights, promote self-awareness and work efficiency.
+    </p>
+
+    <h2>Quick Guide</h2>
+    <p> Steps to follow: </p>
+    <ol>
+        <li> <a href="{% url 'classic_tracker:create_stage' %}"> Create current stage if not already exists</a> </li>
+        <li> <a href="{% url 'classic_tracker:create_day' %}"> Create current day if not already exists </a> </li>
+        <li> <a href="{% url 'classic_tracker:create_subject' %}"> Create subject of the upcoming session if not already exists </a> </li>
+        <li> <a href="{% url 'classic_tracker:create_session' %}"> Create session </a> </li>
+    </ol>
+
+    <h2>Example of Usage</h2>
+    <p>
+        Tom, undergrad student, wakes up and start the first day of his Fall 2022 semester.
+        He creates a new stage "Fall 22", a new day "09/01/2022" belongs to it, and a new subject "Algorithms" for a course he takes this semester.
+        Since the day ("09/01/2022") is yet ended, for now he leaves "worktime", "end time", "end after midnight" and "comment" fields as default.
+    </p>
+    <p>
+        Tom leaves for school, finishes his lectures, goes back to the dorm, and starts working on a problem set for the algorithms course.
+        He creates a session which belongs to the day "09/01/2022" and the subject "Algorithms".
+        Since the session is not yet ended, he leaves "end time" and "end after midnight" fields as default for now.
+        After some time, he stops working to have his dinner.
+        He finds his latest session on "My sessions" page, clicks update, and specifies the "end time" and "end after midnight" fields.
+        This procedure is repeated for a few other sessions.
+    </p>
+    <p>
+        Before going to bed, Tom finds the day "09/01/2022" on "My days" page, ends it by specifying relevant fields.
+    </p>
+
+    <script>
+        {# Image magnifier #}
+        let e = Event;
+        let evt = new Magnifier_event();
+        let m = new Magnifier(evt);
+        m.attach({
+            thumb: '#thumb',
+            mode: 'inside',
+            zoom: 3,
+            {# Correct lens position by adding image offsets #}
+            onthumbmove: function (event) {
+                let thumb = document.getElementById("thumb");
+                let offset_left = thumb.offsetLeft;
+                let offset_top = thumb.offsetTop;
+
+                document.getElementById("thumb-lens").style.position = 'absolute';
+                document.getElementById("thumb-lens").style.left
+                    = (parseInt(document.getElementById("thumb-lens").style.left) + offset_left).toString() + 'px';
+                document.getElementById("thumb-lens").style.top
+                    = (parseInt(document.getElementById("thumb-lens").style.top) + offset_top).toString() + 'px';
+            }
+        });
+    </script>
+{% endcache %}
+{% endblock %}

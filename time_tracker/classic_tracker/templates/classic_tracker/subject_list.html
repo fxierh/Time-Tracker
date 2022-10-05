@@ -1,0 +1,97 @@
+{% extends "header&footer.html" %}
+
+{% load static %}
+{% load filters %}
+
+{% block title_block %} <title> Subject List </title> {% endblock %}
+
+{% block source_block %}
+    {# DataTables #}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
+
+    {# My own JS utilities #}
+    <script src="{% static 'refresh.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <table id="subject_table" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th> Name </th>
+                <th> Total study time </th>
+                <th> Session count </th>
+                <th> Average session time </th>
+                <th> Portals </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subject_list %}
+            <tr>
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.total_study_time | sec2hourmin }}</td>
+                <td>{{ subject.session_count }}</td>
+                <td>{{ subject.total_study_time | divide:subject.session_count | sec2hourmin }}</td>
+                <td>
+                    <a href="{% url 'classic_tracker:list_session' %}?subject={{subject.id}}">SESSIONS</a>
+                    <a href="/classic_tracker/update_subject/{{subject.id}}">UPDATE</a>
+                    <a href="/classic_tracker/delete_subject/{{subject.id}}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        let csrf_token = '{{ csrf_token }}';
+
+        {# Rendering of subject table #}
+        $(document).ready(function () {
+            $('#subject_table').DataTable({
+                scrollX: true,
+                'processing': true,
+                'order': [],
+                'columnDefs': [ {
+                    {# The 4th column #}
+                    'targets': [4],
+                    {# Disable sorting #}
+                    'orderable': false,
+                 }],
+                dom: '<"top"Bf>rt<"bottom"ip>',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            {# Only export columns 0, 1, 2, 3 #}
+                            columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        }
+                    },
+                ],
+            });
+        });
+    </script>
+
+    <div>
+        {# The refresh function is defined in assets.js #}
+        <button type="button" class="btn btn-outline-primary" onclick="refresh()"> Refresh </button>
+    </div>
+{% endblock %}

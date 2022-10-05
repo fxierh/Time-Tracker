@@ -1,0 +1,144 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        {# For proper responsive behavior in mobile devices #}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        {% block title_block %} <title> </title> {% endblock %}
+
+        {% block favicon_block %} <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_tr/favicon-32x32.png' %}"> {% endblock %}
+
+        {# Google tag (gtag.js) for Google Analytics #}
+{#        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GXXN9RR5RR"></script>#}
+{#        <script>#}
+{#            window.dataLayer = window.dataLayer || [];#}
+{#            function gtag(){dataLayer.push(arguments);}#}
+{#            gtag('js', new Date());#}
+{##}
+{#            gtag('config', 'G-GXXN9RR5RR');#}
+{#        </script>#}
+
+        {# CSS #}
+        {# Bootstrap (CSS only) #}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+        {# JS #}
+        {# jquery #}
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        {# Bootstrap (JavaScript Bundle with Popper) #}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+        {% block source_block %} {% endblock %}
+    </head>
+
+    <body>
+        {# Bootstrap navbar (header) #}
+        <div class="container-fluid gx-0 mb-2">
+            <nav class="navbar navbar-expand-md" id="header_nav">
+
+                {# Brand logo #}
+                <a class="navbar-brand ms-3" href="{% url 'home' %}">
+                    <img src="{% static 'favicon_tr/favicon-32x32.png' %}" width="32" height="32" alt="Time Tracker Logo">
+                </a>
+
+                {# Hamburger collapse button #}
+                <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                {# Main navbar #}
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'classic_tracker:dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">View</a>
+                            <ul class="dropdown-menu">
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:list_stage' %}"> My Stages </a> </li>
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:list_day' %}"> My Days </a> </li>
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:list_subject' %}"> My Subjects </a> </li>
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:list_session' %}"> My Sessions </a> </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Create</a>
+                            <ul class="dropdown-menu">
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:create_stage' %}"> Create Stage </a> </li>
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:create_day' %}"> Create Day </a> </li>
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:create_subject' %}"> Create Subject </a> </li>
+                                <li> <a class="dropdown-item" href="{% url 'classic_tracker:create_session' %}"> Create Session</a> </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="collapse navbar-collapse justify-content-end me-4" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'update_user' user.id %}"> {{user.get_username}} </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}"> Log Out </a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registration' %}"> Registration </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}"> Log In </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <script>
+            let hour = (new Date).getHours();
+
+            {# Set header theme depending on user time #}
+            if (hour <= 7 || hour >= 18) {
+                $('#header_nav').removeClass('navbar-light bg-light').addClass('navbar-dark bg-dark');
+            } else {
+                $('#header_nav').removeClass('navbar-dark bg-dark').addClass('navbar-light bg-light');
+            }
+        </script>
+
+        <div class="container">
+        {% block body_block %}
+        {% endblock %}
+        </div>
+
+        {% load cache %}
+        {% cache None footer %}
+        {# Bootstrap footer #}
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <a href="/" class="col-md-4 d-flex align-items-center justify-content-start link-dark text-decoration-none">
+                    <img class="bi me-3" src="{% static 'favicon_tr/favicon-32x32.png' %}" width="32" height="32" alt="Time Tracker Logo">
+                    <p class="mb-0 text-muted justify-content-start">&copy; 2022</p>
+                </a>
+
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="{% url 'FAQs' %}" class="nav-link px-2 text-muted">FAQs</a></li>
+                    <li class="nav-item"><a href="{% url 'about' %}" class="nav-link px-2 text-muted">About</a></li>
+                    <li class="nav-item">
+                        <a href="https://github.com/fxie520/Time-Tracker" class="nav-link px-2 text-muted">
+                            <img src="{% static 'classic_tracker/Icons/Github.svg' %}" alt="GitHub Logo" height="20">
+                        </a>
+                    </li>
+                </ul>
+            </footer>
+        </div>
+        {% endcache %}
+    </body>
+</html>

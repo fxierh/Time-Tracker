@@ -1,0 +1,111 @@
+{% extends "header&footer.html" %}
+
+{% load static %}
+{% load filters %}
+
+{% block title_block %} <title> Stage List </title> {% endblock %}
+
+{% block source_block %}
+    {# DataTables #}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
+
+    {# My own JS utilities #}
+    <script src="{% static 'refresh.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <table id="stage_table" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th> Name </th>
+                <th> # Day </th>
+                <th> # Session </th>
+                <th> Total work time </th>
+                <th> Total usable time </th>
+                <th> Total study time </th>
+                <th> Average time usage </th>
+                <th> Max work time </th>
+                <th> Max usable time </th>
+                <th> Max study time </th>
+                <th> Max time usage </th>
+                <th> Portals </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stage in stage_list %}
+            <tr>
+                <td>{{ stage.name }}</td>
+                <td>{{ stage.day_count }}</td>
+                <td>{{ stage.session_count }}</td>
+                <td>{{ stage.total_work_time | sec2hourmin }}</td>
+                <td>{{ stage.total_usable_time | sec2hourmin }}</td>
+                <td>{{ stage.total_study_time | sec2hourmin }}</td>
+                <td>{{ stage.time_usage_ratio | ratio2percentage }}</td>
+                <td>{{ stage.max_work_time | sec2hourmin }}</td>
+                <td>{{ stage.max_usable_time | sec2hourmin }}</td>
+                <td>{{ stage.max_study_time | sec2hourmin }}</td>
+                <td>{{ stage.max_time_usage_ratio | ratio2percentage }}</td>
+                <td>
+                    <a href="{% url 'classic_tracker:list_day' %}?stage={{stage.id}}">DAYS</a>
+                    <a href="/classic_tracker/update_stage/{{stage.id}}">UPDATE</a>
+                    <a href="/classic_tracker/delete_stage/{{stage.id}}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        let csrf_token = '{{ csrf_token }}';
+
+        {# Rendering of stage table #}
+        $(document).ready(function () {
+            $('#stage_table').DataTable({
+                scrollX: true,
+                'processing': true,
+                'order': [],
+                'columnDefs': [ {
+                    {# The last column #}
+                    'targets': [-1],
+                    {# Disable sorting #}
+                    'orderable': false,
+                 }],
+                dom: '<"top"Bf>rt<"bottom"ip>',
+                buttons: [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            {# Only export columns 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 #}
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        }
+                    },
+                ],
+            });
+        });
+    </script>
+
+    <div>
+        {# The refresh function is defined in assets.js #}
+        <button type="button" class="btn btn-outline-primary" onclick="refresh()"> Refresh </button>
+    </div>
+{% endblock %}

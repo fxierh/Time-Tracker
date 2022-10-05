@@ -1,0 +1,86 @@
+{% extends "header&footer.html" %}
+
+{% load static %}
+{% load filters %}
+
+{% block title_block %} <title> Day List </title> {% endblock %}
+
+{% block source_block %}
+    {# My own JS utilities #}
+    <script src="{% static 'day_of_week.js' %}"></script>
+    <script src="{% static 'pagination.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <div>
+        <button type="button" class="btn btn-outline-primary" id="button-sort-by-day" onclick="sort_by('day')"> Order by date </button>
+    </div>
+
+    <table class="table table-hover table-striped" style="display: block; overflow-x: auto; white-space: nowrap;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Day of week</th>
+                <th>Stage</th>
+                <th>Worktime</th>
+                <th># Session</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Usable time</th>
+                <th>Study time</th>
+                <th>Time usage ratio</th>
+                <th>Portals</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in day_list %}
+            <tr>
+                <td>{{ day.day }}</td>
+                <td class="day-of-week">{{ day.day_of_week }}</td>
+                <td><a href="{% url 'classic_tracker:list_day' %}?stage={{ day.id_stage }}">{{ day.name_stage }}</a></td>
+                <td>{{ day.worktime | sec2hourmin }}</td>
+                <td>{{ day.session_count }}</td>
+                <td>{{ day.start }}</td>
+                <td>{% if day.end %} {{day.end}} {% if day.end_next_day %} of the next day {% endif %} {% endif %}</td>
+                <td>{{ day.usable_time | sec2hourmin }}</td>
+                <td>{{ day.study_time | sec2hourmin }}</td>
+                <td>{{ day.time_usage_ratio | ratio2percentage }}</td>
+                <td>
+                    <a href="{% url 'classic_tracker:list_session' %}?day={{day.id}}">SESSIONS</a>
+                    <a href="/classic_tracker/update_day/{{day.id}}">UPDATE</a>
+                    <a href="/classic_tracker/delete_day/{{day.id}}">DELETE</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {# Pagination link bar#}
+    <nav>
+        <ul class="pagination" id="pagination-ul">
+            {# To complete with JS #}
+        </ul>
+    </nav>
+
+    <script>
+        {# Parse query string #}
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        let current_page = parseInt(Object.fromEntries(urlSearchParams.entries())['page']) || 1;
+        let href = new URL(window.location);
+
+        const total_nb_pages = {{ page_obj.paginator.num_pages }};
+        const pagination_ul = document.getElementById("pagination-ul");
+
+        window.onload = function() {
+            {# Convert day of week numbers to strings #}
+            const day_of_week_cells = document.querySelectorAll('.day-of-week');
+            day_of_week_cells.forEach(cell => {
+                cell.textContent = day_of_week_lookup[cell.textContent]
+            });
+
+            {# Generate pagination section. The pagination function is defined in assets.js #}
+            pagination();
+        };
+    </script>
+
+{% endblock %}

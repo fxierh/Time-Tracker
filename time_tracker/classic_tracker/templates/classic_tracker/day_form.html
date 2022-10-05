@@ -1,0 +1,105 @@
+{% extends "header&footer.html" %}
+
+{% load static %}
+
+{% block title_block %} <title> Create Or Update Day </title> {% endblock %}
+
+{% block source_block %}
+    {# My own JS utilities #}
+    <script src="{% static 'form.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <form method="POST" id="form">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            {{ form.day.errors }}
+            <label for="{{ form.day.id_for_label }}" class="form-label">{{ form.day.label }}:</label>
+            {{ form.day }}
+
+            {% if form.day.help_text %}
+            <div class="form-text">{{ form.day.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            {{ form.stage.errors }}
+            <label for="{{ form.stage.id_for_label }}" class="form-label">{{ form.stage.label }}:</label>
+            {{ form.stage }}
+
+            {% if form.stage.help_text %}
+            <div class="form-text">{{ form.stage.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        {# .g-0 is used to removes the negative margins from .row #}
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3 row gx-0">
+            {{ form.worktime.errors }}
+            <label for="{{ form.worktime.id_for_label }}" class="form-label">{{ form.worktime.label }}:</label>
+            {{ form.worktime }}
+
+            {% if form.worktime.help_text %}
+            <div class="form-text">{{ form.worktime.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            {{ form.start.errors }}
+            <label for="{{ form.start.id_for_label }}" class="form-label">{{ form.start.label }}:</label>
+            {{ form.start }}
+
+            {% if form.start.help_text %}
+            <div class="form-text">{{ form.start.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            {{ form.end.errors }}
+            <label for="{{ form.end.id_for_label }}" class="form-label">{{ form.end.label }}:</label>
+            {{ form.end }}
+
+            {% if form.end.help_text %}
+            <div class="form-text">{{ form.end.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            {{ form.end_next_day.errors }}
+            <label for="{{ form.end_next_day.id_for_label }}" class="form-label">{{ form.end_next_day.label }}:</label>
+            {{ form.end_next_day }}
+
+            {% if form.end_next_day.help_text %}
+            <div class="form-text">{{ form.end_next_day.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            {{ form.comment.errors }}
+            <label for="{{ form.comment.id_for_label }}" class="form-label">{{ form.comment.label }}:</label>
+            {{ form.comment }}
+
+            {% if form.comment.help_text %}
+            <div class="form-text">{{ form.comment.help_text|safe }}</div>
+            {% endif %}
+        </div>
+
+        <input type="submit" value="Submit" class="btn btn-outline-primary disabled" id="submit_button">
+    </form>
+
+    <script>
+        const form = $('#form');
+        const submit_button = $('#submit_button');
+
+        {# Save initial form data (serialized) so that later we can determine if the form is changed #}
+        $(function() {form.data('serialize', form.serialize());});
+
+        {# Disable form submit on Enter #}
+        form.on('keydown', disable_enter_submit);
+
+        {# Enable submit button only when form is changed #}
+        form.on('keyup change paste', 'input, select, textarea', update_submit_button_state);
+    </script>
+{% endblock %}

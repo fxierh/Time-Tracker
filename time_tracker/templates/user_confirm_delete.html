@@ -1,0 +1,37 @@
+{% extends "header&footer.html" %}
+
+{% load static %}
+
+{% block title_block %} <title> Delete Account </title> {% endblock %}
+
+{% block source_block %}
+    {# My own JS utilities #}
+    <script src="{% static 'form.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <h1>Are you sure you want to <em>irreversibly</em> delete your account and all your data ?</h1>
+
+    <form action="" method="post" id="form">
+        {% csrf_token %}
+        <input type="submit" value="Delete Account" class="btn btn-danger disabled" id="submit_button">
+    </form>
+
+    <script>
+        const form = $('#form');
+        const submit_button = $('#submit_button');
+
+        {# Disable form submit on Enter #}
+        form.on('keydown', disable_enter_submit);
+
+        /**
+         * Enables submit button
+         */
+        function enable_submit_button () {
+            submit_button.removeClass('disabled');
+        }
+
+        {# Wait 2s before enabling submit button #}
+        $(function () {setTimeout(enable_submit_button, 2000);});
+    </script>
+{% endblock %}

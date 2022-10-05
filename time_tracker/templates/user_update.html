@@ -1,0 +1,49 @@
+{% extends "header&footer.html" %}
+{% load static %}
+
+{% block title_block %} <title> Profile </title> {% endblock %}
+
+{% block source_block %}
+    {# My own JS utilities #}
+    <script src="{% static 'form.js' %}"></script>
+{% endblock %}
+
+{% block body_block %}
+    <h1> Profile </h1>
+    <form method="POST" id="form">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div class="mb-3 col-12 col-sm-11 col-md-8 col-lg-6 col-xl-5">
+                {{ field.errors }}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+                {{ field }}
+
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text|safe }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <input type="submit" value="Submit" class="btn btn-outline-primary disabled" id="submit_button">
+    </form>
+
+    <br>
+    <a href="{% url 'password_change' %}" class="btn btn-warning"> Change password </a>
+    <a href="{% url 'delete_user' user.id %}" class="btn btn-danger"> Delete account </a>
+
+    <script>
+        const form = $('#form');
+        const submit_button = $('#submit_button');
+
+        {# Save initial form data (serialized) so that later we can determine if the form is changed #}
+        $(function() {form.data('serialize', form.serialize());});
+
+        {# Disable form submit on Enter #}
+        form.on('keydown', disable_enter_submit);
+
+        {# Enable submit button only when form is changed #}
+        form.on('keyup change paste', 'input, select, textarea', update_submit_button_state);
+    </script>
+{% endblock %}

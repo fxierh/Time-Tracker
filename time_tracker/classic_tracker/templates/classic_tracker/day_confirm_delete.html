@@ -1,0 +1,13 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Delete Day </title> {% endblock %}
+
+{% block body_block %}
+    <h1>Are you sure you want to delete {{day}}?</h1>
+    <p><strong> Delete a day results in the deletion of all its sessions </strong></p>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Submit" class="btn btn-outline-primary">
+    </form>
+{% endblock %}

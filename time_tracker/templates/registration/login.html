@@ -1,0 +1,42 @@
+{% extends "header&footer.html" %}
+
+{% block title_block %} <title> Log In </title> {% endblock %}
+
+{% block body_block %}
+    {% if form.errors %}
+        <p>Your username or password was incorrect. Both fields may be case-sensitive.</p>
+    {% endif %}
+
+    <form method='post' action="{% url 'login' %}">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                {{ field.errors }}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
+                {{ field }}
+
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text|safe }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <input type="submit" value='login' class="btn btn-outline-primary">
+    </form>
+
+    <br>
+    <form method="post" action="{% url 'login' %}" autocomplete="off" id="form_visitor">
+        {% csrf_token %}
+        <div>
+            <input type="hidden" name="username" readonly value="visitor">
+        </div>
+        <div>
+            <input type="hidden" name="password" readonly value="visitor_123456">
+        </div>
+        <p>Wanna take a tour ?
+            <a href="#" onclick="document.getElementById('form_visitor').submit();" class="text-primary"> Log in as visitor</a>
+        </p>
+    </form>
+    <p>Password forgotten ? <a href="{% url 'password_reset' %}" class="text-warning">Reset your password</a></p>
+{% endblock %}

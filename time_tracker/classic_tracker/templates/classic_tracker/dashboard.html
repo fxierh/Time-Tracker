@@ -1,0 +1,262 @@
+{% extends "header&footer.html" %}
+
+{% load filters %}
+
+{% block title_block %} <title> Dashboard </title> {% endblock %}
+
+{% block source_block %} <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script> {% endblock %}
+
+{% block body_block %}
+    <h1> Dashboard </h1>
+
+    <div class="row justify-content-evenly">
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            <select class="form-select" id="chart-content-select">
+                <option value='global'> Global time distribution </option>
+                <option value='study'> Study time distribution </option>
+            </select>
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            <select class="form-select" id="chart-type-select">
+                <option value='pie'> Pie chart </option>
+                <option value='doughnut'> Doughnut chart </option>
+                <option value='line'> Line chart </option>
+                <option value='area'> Area chart </option>
+                <option value='bar'> Bar chart </option>
+            </select>
+        </div>
+
+        <div class="mb-3 col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+            <button type="button" class="btn btn-outline-primary" id="download-chart-button"> Download as .png image </button>
+        </div>
+    </div>
+
+    <div class="chart-container" style="width: 100%; overflow-x: auto; overflow-y: hidden">
+        <div style="width: 600px; height: 300px; margin: 0 auto" id="chart_wrapper">
+            <canvas id="chart" height="300" width="0"></canvas>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Generate background & boarder color, using vertical axis value.
+         * @param  {number} value float between 0 and 1, both end inclusive
+         * @return {string} 'rgba(r_val, g_val, b_val, a_val)'
+         */
+        function getColor(value) {
+            return `rgba(${227}, ${12}, ${123}, ${0.9 * value})`;
+        }
+
+        const data_study = {{study_time_distribution_data}};
+        const labels_study = {{study_time_distribution_labels | safe}};
+        {# Normalization #}
+        const max_freq = Math.max(...data_study);
+        const bg_colors_study = data_study.map(val => getColor(val / max_freq));
+
+        const data_global = {{time_distribution_data}};
+        const labels_global = {{time_distribution_labels | safe}};
+        const bg_colors_global = ['rgba(255, 0, 0, 0.8)', 'rgba(0, 255, 0, 0.8)', 'rgba(0, 255, 0, 0.4)', 'rgba(0, 0, 255, 0.8)'];
+
+        const data = {
+            labels: labels_global,
+            datasets: [{
+                label: 'Global time distribution',
+                data: data_global,
+                backgroundColor: bg_colors_global,
+                fill: false,
+            }]
+        };
+
+        const config_pie = {
+            type: 'pie',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        };
+
+        const config_doughnut = {
+            type: 'doughnut',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        };
+
+        const config_line = {
+            type: 'line',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        };
+
+        const config_area = {
+            type: 'line',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        };
+
+        const config_bar = {
+            type: 'bar',
+            data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+            }
+        };
+
+        const configs = {
+            'pie': config_pie,
+            'doughnut': config_doughnut,
+            'line': config_line,
+            'area': config_area,
+            'bar': config_bar
+        };
+
+        // Selects and buttons
+        const chart_content_select = document.getElementById('chart-content-select');
+        chart_content_select.addEventListener('change', updateChartContent);
+        const chart_type_select = document.getElementById('chart-type-select');
+        chart_type_select.addEventListener('change', updateChartType);
+        const download_chart_button = document.getElementById('download-chart-button');
+        download_chart_button.addEventListener('click', downloadChartAsImg);
+        const chart_wrapper = document.getElementById('chart_wrapper');
+
+        // Update chart content
+        function updateChartContent() {
+            data.datasets[0].label = chart_content_select.options[chart_content_select.selectedIndex].text;
+            if (chart_content_select.value === 'global') {
+                data.datasets[0].data = data_global;
+                data.labels = labels_global;
+                data.datasets[0].backgroundColor = bg_colors_global;
+
+                // Automatically switch to pie chart (default chart type for this case)
+                chart_type_select.value = 'pie';
+                chart_type_select.dispatchEvent(new Event('change'));
+            }
+            else if (chart_content_select.value === 'study') {
+                data.datasets[0].data = data_study;
+                data.labels = labels_study;
+                data.datasets[0].backgroundColor = bg_colors_study;
+
+                // Automatically switch to bar chart (default chart type for this case)
+                chart_type_select.value = 'bar';
+                chart_type_select.dispatchEvent(new Event('change'));
+            }
+            // myChart.update()
+        }
+
+        // Change chart type (destroy then render again according to chart type)
+        function updateChartType() {
+            myChart.destroy();
+
+            // Fill only for area chart
+            data.datasets[0].fill = chart_type_select.value === 'area';
+
+            // Change chart container width according to chart type
+            if (chart_type_select.value === "pie" || chart_type_select.value === "doughnut") {
+                chart_wrapper.style["width"] = "600px";
+            }
+            else {
+                chart_wrapper.style["width"] = "1000px";
+            }
+            myChart = new Chart(document.getElementById("chart"), configs[chart_type_select.value]);
+        }
+
+        // Download chart as image button
+        function downloadChartAsImg() {
+            // Create anchor tag
+            let a = document.createElement('a');
+            a.href = myChart.toBase64Image();
+
+            // Define download file name
+            a.download = `${data.datasets[0].label}.png`;
+
+            // Downloaded file a
+            a.click();
+
+            // Delete element
+            a.remove();
+        }
+
+        // Initial chart
+        let myChart = new Chart(document.getElementById("chart"), config_pie);
+    </script>
+
+    <h2> Global analytics </h2>
+    <table class="table table-striped" style="overflow-x: auto; white-space: nowrap;">
+        <thead>
+            <tr>
+                <th> Variable </th>
+                <th> Value </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Stage count</td>
+                <td>{{user.stage_count}}</td>
+            </tr>
+            <tr>
+                <td>Day count</td>
+                <td>{{user.day_count}}</td>
+            </tr>
+            <tr>
+                <td>Session count</td>
+                <td>{{user.session_count}}</td>
+            </tr>
+            <tr>
+                <td>Subject count</td>
+                <td>{{user.subject_count}}</td>
+            </tr>
+            <tr>
+                <td>Total usable time</td>
+                <td>{{user.total_usable_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Total study time</td>
+                <td>{{user.total_study_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Total work time</td>
+                <td>{{user.total_work_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Max usable time</td>
+                <td>{{max_usable_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Max study time</td>
+                <td>{{max_study_time | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Max time usage percentage</td>
+                <td>{{max_time_usage_ratio | ratio2percentage}}</td>
+            </tr>
+            <tr>
+                <td>Average session time</td>
+                <td>{{user.total_study_time | divide:user.session_count | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Average day time</td>
+                <td>{{user.total_study_time | divide:user.day_count | sec2hourmin}}</td>
+            </tr>
+            <tr>
+                <td>Time usage percentage</td>
+                <td>{{user.total_study_time | divide:user.total_usable_time | ratio2percentage}}</td>
+            </tr>
+            <tr>
+                <td>Study work ratio</td>
+                <td>{{user.total_study_time | divide:user.total_work_time | floatformat:1}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

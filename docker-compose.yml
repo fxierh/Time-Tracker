@@ -1,0 +1,72 @@
+# Docker compose file for local development
+
+version: '3.9'
+
+services:
+
+  django:
+    container_name: django
+    build:
+      context: ./time_tracker
+      dockerfile: Dockerfile
+    volumes:
+      - ./time_tracker:/home/time_tracker  # Bind mount: reflects source code changes in container
+      - /home/time_tracker/venv  # Avoid copying virtual environment set up in the container to localhost
+      - static:/home/time_tracker/static_root  # Named volume shared with the nginx container
+    ports:
+      - '127.0.0.1:8000:8000'
+    depends_on:
+      - mysql
+      - redis
+    env_file:
+      - ./env/django.env
+    command:
+      - bash
+      - -c
+      - |
+        while ! mysql --user="$${MYSQL_USER}" --password="$${MYSQL_PASSWORD}" --host=mysql -e "status" &> /dev/null; do
+          echo "Waiting for MySQL connection"
+          sleep 2
+        done
+        python3.10 manage.py migrate
+        if ! [[ $$(mysql --user="$${MYSQL_USER}" --password="$${MYSQL_PASSWORD}" -h mysql -ss -e "select * from time_tracker_db.classic_tracker_user" 2> /dev/null) ]]; then
+          echo "No user found in database, creating superuser"
+          python3.10 manage.py createsuperuser --noinput
+        fi
+        python3.10 manage.py collectstatic --no-input
+        gunicorn -c gunicorn_conf.py time_tracker.wsgi
+#        python3.10 manage.py runserver 0.0.0.0:8000
+
+  mysql:
+    container_name: mysql
+    restart: always
+    image: mysql:8.0.30
+    volumes:
+      - mysql_data:/var/lib/mysql
+    env_file:
+      - ./env/mysql.env
+
+  redis:
+    container_name: redis
+    restart: always
+    image: redis:7.0.5-alpine
+    volumes:
+      - redis_data:/data
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Bind mount: reflects source code changes in container
+      - static:/static  # Named volume shared with the django container
+    ports:
+      - '80:80'
+    depends_on:
+      - django
+
+volumes:
+  mysql_data:
+  redis_data:
+  static:

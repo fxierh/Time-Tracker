@@ -1,0 +1,23 @@
+__pycache__/
+.DS_Store
+.idea/
+
+# Legacy files
+Legacy/
+
+# Result of collectstatic
+static_root/
+
+# Interpreters
+Interpreter/
+venv/
+
+# Sensitive info
+env/
+environment_variables.py
+*.pem
+dkim-dns-records.csv
+AWS_info.txt
+
+# Apache configuration files
+httpd/
