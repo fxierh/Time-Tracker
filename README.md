@@ -1,7 +1,7 @@
 # Time Tracker
 
-![Django CI Badge](https://github.com/fxie520/Time-Tracker/actions/workflows/CI.yml/badge.svg)
-![Django CD Badge](https://github.com/fxie520/Time-Tracker/actions/workflows/CD.yml/badge.svg)
+[//]: # (![Django CI Badge]&#40;https://github.com/fxie520/Time-Tracker/actions/workflows/CI.yml/badge.svg&#41;)
+[//]: # (![Django CD Badge]&#40;https://github.com/fxie520/Time-Tracker/actions/workflows/CD.yml/badge.svg&#41;)
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 **Checkout Time Tracker [here](https://www.timetracker.club) !**
@@ -18,7 +18,7 @@ It organizes a user's time as follows:
 - A session belongs to one single day, and one single subject.
 
 <p align="center">
-<img alt="" src="https://github.com/fxie520/Time-Tracker/blob/main/static/Time_organization.png"/>
+<img alt="" src="https://github.com/fxie520/Time-Tracker/blob/main/time_tracker/static/Time_organization.png"/>
 Organization of a user's time
 </p>
 
