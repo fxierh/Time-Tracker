@@ -24,8 +24,9 @@ services:
 
   nginx:
     container_name: nginx
-    image: fxie520/time_tracker:nginx
+    image: nginx:1.23.1
     volumes:
+      - ./nginx_prod.conf:/etc/nginx/conf.d/:ro
       - /var/log/nginx:/var/log/nginx
 #      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
       - static:/static  # Named volume shared with the django container
@@ -38,6 +39,7 @@ services:
       - django
 
   certbot:
+    container_name: certbot
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
