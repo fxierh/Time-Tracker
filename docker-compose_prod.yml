@@ -6,9 +6,10 @@ services:
 
   django:
     container_name: django
-    build:
-      context: ./time_tracker
-      dockerfile: Dockerfile_prod
+    image: fxie520/time_tracker:django
+#    build:
+#      context: ./time_tracker
+#      dockerfile: Dockerfile_prod
     volumes:
       - /var/log/gunicorn:/home/time_tracker/log
       - /home/time_tracker/venv
@@ -25,9 +26,10 @@ services:
 
   nginx:
     container_name: nginx
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile_prod
+    image: fxie520/time_tracker:nginx
+#    build:
+#      context: ./nginx
+#      dockerfile: Dockerfile_prod
     volumes:
       - /var/log/nginx:/var/log/nginx
       - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container

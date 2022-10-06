@@ -1,12 +1,9 @@
 # Docker file for local development
 FROM ubuntu:22.04
 
-# Install python 3.10.6 & pip
+# Install python 3.10.6, pip & MySQL client
 RUN apt-get update
-RUN apt-get install -y python3.10 python3-pip python3.10-venv
-
-# Install MySQL client
-RUN apt-get install -y mysql-client libmysqlclient-dev
+RUN apt-get install -y python3.10 python3-pip python3.10-venv mysql-client libmysqlclient-dev
 
 # Install requirements
 WORKDIR /home/time_tracker
