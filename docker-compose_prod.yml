@@ -51,7 +51,6 @@ services:
       - --email={email}
       - --agree-tos
       - --no-eff-email
-      - --dry-run
       - -d
       - www.timetracker.club
       - -d
