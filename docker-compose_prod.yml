@@ -6,7 +6,10 @@ services:
 
   django:
     container_name: django
-    image: fxie520/time_tracker:django
+#    image: fxie520/time_tracker:django
+    build:
+      context: ./time_tracker
+      dockerfile: Dockerfile_prod
     volumes:
       - /var/log/gunicorn:/home/time_tracker/log
       - /home/time_tracker/venv
@@ -19,12 +22,15 @@ services:
       - |
         python3.10 manage.py migrate
         python3.10 manage.py collectstatic --no-input
-        python3.10 manage.py runserver 0.0.0.0:8000
-#        gunicorn -c gunicorn_conf.py time_tracker.wsgi
+        gunicorn -c gunicorn_conf.py time_tracker.wsgi
+#        python3.10 manage.py runserver 0.0.0.0:8000
 
   nginx:
     container_name: nginx
-    image: fxie520/time_tracker:nginx
+#    image: fxie520/time_tracker:nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile_prod
     volumes:
       - /var/log/nginx:/var/log/nginx
 #      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
