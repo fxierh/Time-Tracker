@@ -54,6 +54,8 @@ services:
       - --dry-run
       - -d
       - www.timetracker.club
+      - -d
+      - timetracker.club
     depends_on:
       - nginx
 
