@@ -6,16 +6,15 @@ services:
 
   django:
     container_name: django
-#    image: fxie520/time_tracker:django
     build:
       context: ./time_tracker
       dockerfile: Dockerfile_prod
     volumes:
       - /var/log/gunicorn:/home/time_tracker/log
-      - /home/time_tracker/venv
+#      - /home/time_tracker/venv
       - static:/home/time_tracker/static_root  # Named volume shared with the nginx container
     env_file:
-      - ./env/prod.env  # This file is built using GitHub secrets
+      - ./env/prod.env  # This file should be built using GitHub secrets
     command:
       - bash
       - -c
@@ -23,20 +22,17 @@ services:
         python3.10 manage.py migrate
         python3.10 manage.py collectstatic --no-input
         gunicorn -c gunicorn_conf.py time_tracker.wsgi
-#        python3.10 manage.py runserver 0.0.0.0:8000
 
   nginx:
     container_name: nginx
-#    image: fxie520/time_tracker:nginx
     build:
       context: ./nginx
       dockerfile: Dockerfile_prod
     volumes:
       - /var/log/nginx:/var/log/nginx
-#      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
       - static:/static  # Named volume shared with the django container
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf/:/etc/letsencrypt/:ro
+      - ./certbot/www:/var/www/certbot/:ro  # Certbot webroot
+      - ./certbot/conf/:/etc/letsencrypt/:ro  # Certbot certificates
     ports:
       - '80:80'
       - '443:443'
@@ -47,8 +43,8 @@ services:
     container_name: certbot
     image: certbot/certbot:latest
     volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
+      - ./certbot/www/:/var/www/certbot/:rw  # Certbot webroot
+      - ./certbot/conf/:/etc/letsencrypt/:rw  # Certbot certificates
     command:
       - certonly
       - --keep-until-expiring
