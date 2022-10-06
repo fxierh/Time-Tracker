@@ -45,6 +45,7 @@ services:
       - ./certbot/conf/:/etc/letsencrypt/:rw
     command:
       - certonly
+      - --keep-until-expiring
       - --webroot
       - --webroot-path
       - /var/www/certbot
