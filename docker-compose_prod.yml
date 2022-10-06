@@ -27,34 +27,34 @@ services:
     image: fxie520/time_tracker:nginx
     volumes:
       - /var/log/nginx:/var/log/nginx
-      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
+#      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
       - static:/static  # Named volume shared with the django container
-#      - ./certbot/www:/var/www/certbot/:ro
-#      - ./certbot/conf/:/etc/letsencrypt/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/letsencrypt/:ro
     ports:
       - '80:80'
       - '443:443'
     depends_on:
       - django
 
-#  certbot:
-#    image: certbot/certbot:latest
-#    volumes:
-#      - ./certbot/www/:/var/www/certbot/:rw
-#      - ./certbot/conf/:/etc/letsencrypt/:rw
-#    command:
-#      - certonly
-#      - --webroot
-#      - --webroot-path
-#      - /var/www/certbot
-#      - --email={email}
-#      - --agree-tos
-#      - --no-eff-email
-#      - --dry-run
-#      - -d
-#      - timetracker.club
-#    depends_on:
-#      - nginx
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    command:
+      - certonly
+      - --webroot
+      - --webroot-path
+      - /var/www/certbot
+      - --email={email}
+      - --agree-tos
+      - --no-eff-email
+      - --dry-run
+      - -d
+      - timetracker.club www.timetracker.club
+    depends_on:
+      - nginx
 
 volumes:
   static:
