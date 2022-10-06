@@ -36,7 +36,6 @@ services:
       - '443:443'
     depends_on:
       - django
-      - certbot
 
   certbot:
     image: certbot/certbot:latest
@@ -55,6 +54,8 @@ services:
       - -d
       - timetracker.club
       - www.timetracker.club
+    depends_on:
+      - nginx
 
 volumes:
   static:
