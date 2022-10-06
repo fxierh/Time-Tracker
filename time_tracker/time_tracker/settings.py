@@ -36,23 +36,6 @@ else:
     DEBUG = debug
     ALLOWED_HOSTS = allowed_hosts
 
-# Local development or production environment
-# try:
-#     # from . import environment_variables
-#     from .environment_variables import debug, allowed_hosts
-#
-#     # Load environment variables
-#     # environment_variables.setVar()
-#
-#     # SECURITY WARNING: don't run with debug turned on in production!
-#     DEBUG = debug
-#     ALLOWED_HOSTS = allowed_hosts
-#
-# # GitHub CI environment
-# except ImportError:
-#     DEBUG = True
-#     ALLOWED_HOSTS = []
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -207,3 +190,6 @@ INTERNAL_IPS = [
 
 # Use secure cookie which is only sent to the server with an encrypted request over HTTPS
 SESSION_COOKIE_SECURE = True
+
+# Trusted origins for unsafe requests (e.g. POST).
+CSRF_TRUSTED_ORIGINS = ['https://*.timetracker.club']
