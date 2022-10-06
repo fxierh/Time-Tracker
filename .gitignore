@@ -21,3 +21,6 @@ AWS_info.txt
 
 # Apache configuration files
 httpd/
+
+# Certbot
+certbot/
