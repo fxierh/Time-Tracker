@@ -48,10 +48,9 @@ services:
       - --webroot
       - --webroot-path
       - /var/www/certbot
+      - --agree-tos
       - --email
       - fxie@timetracker.club
-      - --agree-tos
-      - --email EMAIL
       - --no-eff-email
       - -d
       - www.timetracker.club
