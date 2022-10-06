@@ -26,7 +26,7 @@ services:
     container_name: nginx
     image: nginx:1.23.1
     volumes:
-      - ./nginx_prod.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx_prod.conf:/etc/nginx/nginx.conf/:ro
       - /var/log/nginx:/var/log/nginx
 #      - /etc/letsencrypt/live/timetracker.club:/letsencrypt  # Bind mount: mount SSL certificate files in container
       - static:/static  # Named volume shared with the django container
