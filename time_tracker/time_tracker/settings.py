@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-# Inside docker
+# Inside docker or running on GitHub runner
 if os.environ.get('DOCKER') == 'True':
 
     # Local development
@@ -21,7 +21,7 @@ if os.environ.get('DOCKER') == 'True':
         DEBUG = True
         ALLOWED_HOSTS = ['*']
 
-    # Deployment
+    # Deployment or GitHub CI workflow
     else:
         DEBUG = False
         ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')

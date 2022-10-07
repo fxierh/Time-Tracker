@@ -38,9 +38,6 @@ jobs:
       run: |
         sudo /etc/init.d/mysql start        
         mysql -e 'CREATE DATABASE time_tracker_db CHARACTER SET utf8;' -uroot -proot
-#    - name: Install Apache 2
-#      run: |
-#        sudo apt-get install -y apache2-dev
     - name: checkout repo
       uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -52,15 +49,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r time_tracker/requirements.txt
     - name: Run Tests
-      # Environment variables: use GitHub secrets
       env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        ALLOWED_HOSTS: "*"
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}   # Use GitHub secret here
         REDIS_LOCATION: redis://redis:6379
-#        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-#        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-#        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
-#        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-#        AWS_REGION: ${{ secrets.AWS_REGION }}
-#        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        MYSQL_ROOT_PASSWORD: "root"
+        MYSQL_HOST: "localhost"
+        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        DOCKER: "True"
       run: |
         python time_tracker/manage.py test
