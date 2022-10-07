@@ -15,10 +15,17 @@ jobs:
     runs-on: ubuntu-22.04
     environment: production
     steps:
-      - name: SSH to EC2 then deploy
+      - name: Create EC2 key file
         run: |
           echo "${{ secrets.EC2_RSA_PRIVATE_KEY }}" > key_pair.pem
           chmod 600 key_pair.pem
+      - name: Create prod.env file and scp to EC2
+        run: |
+          echo "${{ secrets.PROD_ENV }}" > prod.env
+          chmod 644 prod.env
+          scp -o StrictHostKeyChecking=no -i key_pair.pem prod.env ec2-user@"${{ secrets.EC2_ENDPOINT }}":/home/ec2-user/Time-Tracker/env
+      - name: Run Container on EC2
+        run: |
           ssh -o StrictHostKeyChecking=no -i key_pair.pem ec2-user@${{ secrets.EC2_ENDPOINT }} "
             # Update code repo
             cd /home/ec2-user/Time-Tracker
