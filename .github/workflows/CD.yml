@@ -1,0 +1,35 @@
+name: CD
+
+concurrency: production
+
+on:
+  # Triggered only when the CI workflow succeeded
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deployment:
+    name: Deployment
+    runs-on: ubuntu-22.04
+    environment: production
+    steps:
+      - name: SSH to EC2 then deploy
+        run: |
+          echo "${{ secrets.EC2_RSA_PRIVATE_KEY }}" > key_pair.pem
+          chmod 600 key_pair.pem
+          ssh -o StrictHostKeyChecking=no -i key_pair.pem ec2-user@${{ secrets.EC2_ENDPOINT }} "
+            # Update code repo
+            cd /home/ec2-user/Time-Tracker
+            git pull
+          
+            # Docker compose down
+            docker-compose -f docker-compose_prod.yml down -v
+          
+            # Docker compose up
+            docker-compose -f docker-compose_prod.yml up --build -d
+          
+            # Disconnect
+            exit
+          "
