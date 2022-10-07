@@ -56,8 +56,8 @@ jobs:
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         REDIS_LOCATION: redis://redis:6379
-        MYSQL_USER: ${{ secrets.MYSQL_USER }}
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
 #        MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
 #        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
 #        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
