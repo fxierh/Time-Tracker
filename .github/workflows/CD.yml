@@ -34,6 +34,9 @@ jobs:
             # Docker compose down
             docker-compose -f docker-compose_prod.yml down -v
           
+            # Clear Redis cache
+            /home/ec2-user/redis-stable/src/redis-cli -h ${{ REDIS_ENDPOINT }} -p 6379 flushall
+          
             # Docker compose up
             docker-compose -f docker-compose_prod.yml up --build -d
           
