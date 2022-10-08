@@ -43,6 +43,8 @@ services:
     image: mysql:8.0.30
     volumes:
       - mysql_data:/var/lib/mysql
+    ports:
+      - '3306:3306'  # So that data can be viewed in IDE
     env_file:
       - ./env/mysql.env
 
@@ -52,6 +54,8 @@ services:
     image: redis:7.0.5-alpine
     volumes:
       - redis_data:/data
+    ports:
+      - '6379:6379'  # So that data can be viewed using redis-cli
 
   nginx:
     container_name: nginx
