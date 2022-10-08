@@ -103,10 +103,13 @@ DATABASES = {
         'HOST': os.environ.get('MYSQL_HOST'),
         'PORT': '3306',
         'OPTIONS': {
-           'init_command': 'SET default_storage_engine=INNODB',
+           'init_command': 'SET default_storage_engine=INNODB; SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
         },
     }
 }
+# Persistent connection
+CONN_MAX_AGE = 60
+CONN_HEALTH_CHECKS = True
 
 # Cache
 CACHES = {
@@ -166,30 +169,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom user model
 AUTH_USER_MODEL = 'classic_tracker.User'
 
-# Domain name (used in password reset email)
-DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
-
 # URL to redirect after login
 LOGIN_REDIRECT_URL = 'home'
 
-# Email settings
+# Email
 EMAIL_BACKEND = 'time_tracker.email_backend.AmazonSESEmailBackend'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 AWS_REGION = os.environ.get('AWS_REGION')
+DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
 
 # Django debug toolbar settings
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
 }
-
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# Use secure cookie which is only sent to the server with an encrypted request over HTTPS
+# Session
 SESSION_COOKIE_SECURE = True
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
-# Trusted origins for unsafe requests (e.g. POST).
-CSRF_TRUSTED_ORIGINS = ['https://*.timetracker.club']
+# CSRF
+CSRF_TRUSTED_ORIGINS = ['https://*.timetracker.club']  # Trusted origins for unsafe requests (e.g. POST).
+CSRF_COOKIE_SECURE = True
