@@ -160,7 +160,7 @@ class SessionCreateUpdateForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         # Make sure user only sees his own days and subjects
-        self.fields['day'].queryset = Day.objects.filter(user=self.user)
+        self.fields['day'].queryset = Day.objects.filter(user=self.user).order_by('-day')
         self.fields['subject'].queryset = Subject.objects.filter(user=self.user)
 
         # Set the default date and start time here so that they are updated upon page refresh
