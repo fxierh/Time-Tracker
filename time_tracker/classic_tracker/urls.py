@@ -1,6 +1,4 @@
 from django.urls import path
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie
 
 from .views import DashboardView, DayListView, DayUpdateView, DayDeleteView, DayCreateView, DayDetailView, \
     SessionCreateView, SessionListView, SessionUpdateView, SessionDeleteView, SessionDetailView, StageCreateView, \
@@ -28,23 +26,13 @@ urlpatterns = [
     path('session/<int:pk>/', SessionDetailView.as_view(), name='detail_session'),
 
     path('create_stage/', StageCreateView.as_view(), name='create_stage'),
-    # Cache the stage list page of each user for 5 minutes
-    path(
-        'list_stage/',
-        cache_page(5 * 60, key_prefix='list_stage')(vary_on_cookie(StageListView.as_view())),
-        name='list_stage'
-    ),
+    path('list_stage/', StageListView.as_view(), name='list_stage'),
     path('update_stage/<int:pk>/', StageUpdateView.as_view(), name='update_stage'),
     path('delete_stage/<int:pk>/', StageDeleteView.as_view(), name="delete_stage"),
     path('stage/<int:pk>/', StageDetailView.as_view(), name='detail_stage'),
 
     path('create_subject/', SubjectCreateView.as_view(), name='create_subject'),
-    # Cache the subject list page of each user for 5 minutes
-    path(
-        'list_subject/',
-        cache_page(5 * 60, key_prefix='list_subject')(vary_on_cookie(SubjectListView.as_view())),
-        name='list_subject'
-    ),
+    path('list_subject/', SubjectListView.as_view(), name='list_subject'),
     path('update_subject/<int:pk>/', SubjectUpdateView.as_view(), name='update_subject'),
     path('delete_subject/<int:pk>/', SubjectDeleteView.as_view(), name="delete_subject"),
     path('subject/<int:pk>/', SubjectDetailView.as_view(), name='detail_subject'),

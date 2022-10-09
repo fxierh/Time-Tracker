@@ -5,11 +5,11 @@ from typing import List, Optional
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import caches
+from django.core.cache.utils import make_template_fragment_key
 from django.db.models import Max, QuerySet, OuterRef, Subquery, F
 from django.db.models.functions import Coalesce
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.utils.cache import get_cache_key
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView, DetailView
 
 from .forms import DayCreateUpdateForm, SessionCreateUpdateForm, StageCreateUpdateForm, SubjectCreateUpdateForm
@@ -399,7 +399,8 @@ class StageListView(LoginRequiredMixin, ListView):
 
         if self.request.body.decode() == 'refresh':
             # Clear cache
-            cache_key = get_cache_key(self.request, 'list_stage', 'GET')
+            cache_key = make_template_fragment_key('stage_list', [self.request.user.username])
+            # cache_key = get_cache_key(self.request, 'list_stage', 'GET')
             caches['default'].delete(cache_key)
 
         # Refresh by redirecting to current page
@@ -522,7 +523,8 @@ class SubjectListView(LoginRequiredMixin, ListView):
 
         if self.request.body.decode() == 'refresh':
             # Clear cache
-            cache_key = get_cache_key(self.request, 'list_subject', 'GET')
+            cache_key = make_template_fragment_key('subject_list', [self.request.user.username])
+            # cache_key = get_cache_key(self.request, 'list_subject', 'GET')
             caches['default'].delete(cache_key)
 
         # Refresh by redirecting to current page

@@ -1,5 +1,6 @@
 {% extends "header&footer.html" %}
 
+{% load cache %}
 {% load static %}
 {% load filters %}
 
@@ -22,6 +23,7 @@
 {% endblock %}
 
 {% block body_block %}
+{% cache 300 subject_list request.user.username %}
     <table id="subject_table" class="display nowrap" style="width:100%">
         <thead>
             <tr>
@@ -91,7 +93,7 @@
     </script>
 
     <div>
-        {# The refresh function is defined in assets.js #}
         <button type="button" class="btn btn-outline-primary" onclick="refresh()"> Refresh </button>
     </div>
+{% endcache %}
 {% endblock %}
