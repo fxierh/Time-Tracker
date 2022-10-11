@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -102,14 +103,71 @@
         </div>
 
         <script>
-            let hour = (new Date).getHours();
-
-            {# Set header theme depending on user time #}
-            if (hour <= 7 || hour >= 18) {
-                $('#header_nav').removeClass('navbar-light bg-light').addClass('navbar-dark bg-dark');
-            } else {
-                $('#header_nav').removeClass('navbar-dark bg-dark').addClass('navbar-light bg-light');
+            /**
+             * Set page theme (dark/light).
+             * @param new_theme New theme
+             * @param set_cookie Whether to set theme cookie
+             * @returns
+             */
+            function set_theme(new_theme, set_cookie=true) {
+                if (new_theme === "dark") {
+                    header_nav.removeClass('navbar-light bg-light').addClass('navbar-dark bg-dark');
+                    theme_switch.classList.remove('btn-dark');
+                    theme_switch.classList.add('btn-light');
+                    theme_switch.innerText = '☀️';
+                    theme = 'dark';
+                } else {
+                    header_nav.removeClass('navbar-dark bg-dark').addClass('navbar-light bg-light');
+                    theme_switch.classList.remove('btn-dark');
+                    theme_switch.classList.add('btn-dark');
+                    theme_switch.innerText = '🌙';
+                    theme = 'light';
+                }
+                {# Set/update theme cookie which is valid for 30 days #}
+                if (set_cookie) {
+                    document.cookie = `theme=${theme}; ;path=/; max-age=108000; SameSite=lax; Secure`;
+                }
             }
+
+            /**
+             * Toggle page theme.
+             * @returns
+             */
+            function switch_theme() {
+                if (theme === "dark") {
+                    set_theme("light");
+                } else {
+                    set_theme("dark");
+                }
+            }
+
+            let hour = (new Date).getHours();
+            let header_nav = $('#header_nav');
+            let theme;
+
+            {# Create theme switch button #}
+            const theme_switch_wrapper = document.createElement('div');
+            const theme_switch = document.createElement('button');
+            theme_switch_wrapper.appendChild(theme_switch);
+            theme_switch_wrapper.style.cssText = "position: fixed; right: 0; bottom: 152px; opacity: 0.5; z-index: 10000000;";
+            theme_switch.setAttribute("type", "button");
+            theme_switch.setAttribute("id", "theme_switch");
+            theme_switch.classList.add('btn');
+            theme_switch.addEventListener("click", switch_theme);
+
+            {# Set theme depending first on cookie, then user time #}
+            if (document.cookie.includes("theme=")) {
+                if (document.cookie[document.cookie.indexOf("theme=") + 6] === "d") {
+                    set_theme("dark");
+                } else {
+                    set_theme("light");
+                }
+            } else if (hour <= 7 || hour >= 18) {
+                set_theme("dark", false);
+            } else {
+                set_theme("light", false);
+            }
+            document.body.appendChild(theme_switch_wrapper);
         </script>
 
         <div class="container">
@@ -117,7 +175,6 @@
         {% endblock %}
         </div>
 
-        {% load cache %}
         {% cache None footer %}
         {# Bootstrap footer #}
         <div class="container">
