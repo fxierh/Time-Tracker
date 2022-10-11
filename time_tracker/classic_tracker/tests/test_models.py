@@ -263,9 +263,9 @@ class TestStage(TestCase):
             'Wrong total work time of associated user'
         )
         self.assertEqual(stage_obj.user.time_usage_ratio,
-                         TestStage.time_usage_ratio,
-                         'Wrong time usage ratio of associated user'
-                         )
+             TestStage.time_usage_ratio,
+             'Wrong time usage ratio of associated user'
+         )
 
     def test_update_stage(self):
         """Test the case when a stage is updated. """

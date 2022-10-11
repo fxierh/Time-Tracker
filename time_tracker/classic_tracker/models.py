@@ -49,7 +49,6 @@ class User(AbstractUser):
     subject_count = models.PositiveIntegerField(default=0)
 
     # 0.0000 (0.00%) to 1.0000 (100.00%)
-    # Note: validators are useful even for automatically calculated fields, since then run when the model is saved.
     time_usage_ratio = models.DecimalField(
         max_digits=5,
         decimal_places=4,
@@ -160,6 +159,8 @@ class Day(models.Model):
         except ZeroDivisionError:
             self.time_usage_ratio = 0
 
+        super().save(*args, **kwargs)
+
         # Update stage
         if self.stage == prev_stage or prev_stage is None:
             self.stage.total_work_time += self.worktime - prev_work_time
@@ -185,8 +186,6 @@ class Day(models.Model):
             self.stage.day_count += 1
 
         self.stage.save()
-
-        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # Delete all sessions associated
@@ -359,6 +358,8 @@ class Stage(models.Model):
         except ZeroDivisionError:
             self.time_usage_ratio = 0
 
+        super().save(*args, **kwargs)
+
         # Update user
         self.user.total_usable_time += self.total_usable_time - prev_total_usable_time
         self.user.total_study_time += self.total_study_time - prev_total_study_time
@@ -366,8 +367,6 @@ class Stage(models.Model):
         self.user.day_count += self.day_count - prev_day_count
         self.user.session_count += self.session_count - prev_session_count
         self.user.save()
-
-        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # Update user
@@ -413,9 +412,10 @@ class Subject(models.Model):
         # Update user if subject created
         if not Subject.objects.filter(id=self.id).exists():
             self.user.subject_count += 1
-        self.user.save()
 
         super().save(*args, **kwargs)
+
+        self.user.save()
 
     def delete(self, *args, **kwargs):
         # Update user
