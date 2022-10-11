@@ -28,6 +28,7 @@ services:
           echo "Waiting for MySQL connection"
           sleep 2
         done
+        python3.10 manage.py makemigrations
         python3.10 manage.py migrate
         if ! [[ $$(mysql --user="$${MYSQL_USER}" --password="$${MYSQL_PASSWORD}" -h mysql -ss -e "select * from time_tracker_db.classic_tracker_user" 2> /dev/null) ]]; then
           echo "No user found in database, creating superuser"
