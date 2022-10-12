@@ -22,3 +22,6 @@ AWS_info.txt
 # Docker
 Dockerfile*
 .dockerignore
+
+# Flake configuration
+.flake8

@@ -1,0 +1,14 @@
+[flake8]
+count = True
+
+statistics = True
+
+max-line-length=127
+
+exclude =
+    Interpreter,
+    venv,
+    migrations,
+    __pycache__,
+    manage.py,
+    settings.py

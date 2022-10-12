@@ -47,16 +47,16 @@ def hours_to_hours_minutes(h: float) -> str:
     return f'{int(h)}h, {round((h - int(h)) * 60)}min'
 
 
-def cumsum_in_place(l: List[int]) -> None:
+def cumsum_in_place(lst: List[int]) -> None:
     """
     This function converts a list to its cumsum, in place. \n
     Example: [1, 3, 5, 7, 9] becomes [1, 4, 9, 16, 25]
     """
 
     cumsum = 0
-    for i, ele in enumerate(l):
+    for i, ele in enumerate(lst):
         cumsum += ele
-        l[i] = cumsum
+        lst[i] = cumsum
     return
 
 

@@ -19,7 +19,7 @@ class TestSecondsToHoursMinutes(SimpleTestCase):
         self.assertEqual(seconds_to_hours_minutes(s), f'{hour}h, {minute}min', 'Wrong output')
 
     def test_zero_input(self):
-        self.assertEqual(seconds_to_hours_minutes(0), f'0h, 0min', 'Wrong output')
+        self.assertEqual(seconds_to_hours_minutes(0), '0h, 0min', 'Wrong output')
 
 
 class TestHoursToHoursMinutes(SimpleTestCase):
@@ -46,10 +46,10 @@ class TestCumsumInPlace(SimpleTestCase):
     def test_typical_usage(self):
         """Test typical usage. """
 
-        l = [1, -1, 2, -3, 5, -8, 13, -21, 34]
-        numpy_output = cumsum(l).tolist()
-        cumsum_in_place(l)
-        self.assertEqual(l, numpy_output, 'Wrong output')
+        lst = [1, -1, 2, -3, 5, -8, 13, -21, 34]
+        numpy_output = cumsum(lst).tolist()
+        cumsum_in_place(lst)
+        self.assertEqual(lst, numpy_output, 'Wrong output')
 
 
 class TestTimeToIndex(SimpleTestCase):

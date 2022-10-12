@@ -16,14 +16,14 @@ class TestTimeDiffInSeconds(SimpleTestCase):
 
         start = time(hour=11, minute=11)
         end = time(hour=13, minute=10)
-        self.assertEqual(time_diff_in_seconds(start, end, False), 7140, f'Wrong duration')
+        self.assertEqual(time_diff_in_seconds(start, end, False), 7140, 'Wrong duration')
 
     def test_end_time_after_midnight(self):
         """Test the case when end time is at or beyond midnight. """
 
         start = time(hour=23, minute=50)
         end = time(hour=1, minute=49)
-        self.assertEqual(time_diff_in_seconds(start, end, True), 7140, f'Wrong duration')
+        self.assertEqual(time_diff_in_seconds(start, end, True), 7140, 'Wrong duration')
 
 
 class TestUser(TestCase):
@@ -262,10 +262,11 @@ class TestStage(TestCase):
             TestStage.total_work_time,
             'Wrong total work time of associated user'
         )
-        self.assertEqual(stage_obj.user.time_usage_ratio,
-             TestStage.time_usage_ratio,
-             'Wrong time usage ratio of associated user'
-         )
+        self.assertEqual(
+            stage_obj.user.time_usage_ratio,
+            TestStage.time_usage_ratio,
+            'Wrong time usage ratio of associated user'
+        )
 
     def test_update_stage(self):
         """Test the case when a stage is updated. """

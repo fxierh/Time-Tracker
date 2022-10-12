@@ -18,4 +18,3 @@ else:
     # Restart workers when code changes. This setting is intended for development.
     reload = True
     reload_extra_files = ["./templates/", "./templates/registration", "./classic_tracker/templates/classic_tracker/"]
-

@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views
 from django.urls import path, include
-from django.views.decorators.cache import cache_page
 
 from .forms import UserLoginForm
-from .views import *
+from .views import HomeView, PasswordResetFormView, ThankYouView, RegistrationFormView, UserUpdateView, \
+    UserDeleteView, FAQsView, NotFoundView, AboutView
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
