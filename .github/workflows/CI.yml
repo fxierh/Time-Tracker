@@ -51,6 +51,7 @@ jobs:
     - name: Linting
       continue-on-error: true
       run: |
+        cd time_tracker
         flake8
     - name: Run Tests
       env:
