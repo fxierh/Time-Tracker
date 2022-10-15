@@ -53,7 +53,7 @@ class TestUser(TestCase):
     def test_create_user(self):
         """Test the case when a user is created. """
 
-        User.objects.create(
+        user_obj = User.objects.create(
             password=TestUser.password,
             is_superuser=TestUser.is_superuser,
             username=TestUser.username,
@@ -70,10 +70,13 @@ class TestUser(TestCase):
             session_count=TestUser.session_count,
             subject_count=TestUser.subject_count,
         )
+        # Hash password then save
+        user_obj.set_password(user_obj.password)
+        user_obj.save()
         user_obj = User.objects.get(username=TestUser.username)
 
         # Check user
-        self.assertEqual(user_obj.password, TestUser.password, 'Wrong password')
+        self.assertTrue(user_obj.check_password(TestUser.password), 'Wrong password')
         self.assertEqual(user_obj.is_superuser, TestUser.is_superuser, 'Wrong is superuser')
         self.assertEqual(user_obj.username, TestUser.username, 'Wrong username')
         self.assertEqual(user_obj.first_name, TestUser.first_name, 'Wrong first name')
@@ -130,7 +133,7 @@ class TestUser(TestCase):
             .quantize(Decimal('.0001'), rounding=ROUND_HALF_EVEN)
 
         user_obj = User.objects.get(username=TestUser.username)
-        user_obj.password = new_password
+        user_obj.set_password(new_password)
         user_obj.is_superuser = new_is_superuser
         user_obj.username = new_username
         user_obj.first_name = new_first_name
@@ -149,7 +152,7 @@ class TestUser(TestCase):
         user_obj = User.objects.get(username=new_username)
 
         # Check user
-        self.assertEqual(user_obj.password, new_password, 'Wrong password')
+        self.assertTrue(user_obj.check_password(new_password), 'Wrong password')
         self.assertEqual(user_obj.is_superuser, new_is_superuser, 'Wrong is superuser')
         self.assertEqual(user_obj.username, new_username, 'Wrong username')
         self.assertEqual(user_obj.first_name, new_first_name, 'Wrong first name')
