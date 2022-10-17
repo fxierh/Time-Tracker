@@ -14,6 +14,8 @@ class UserAdminExtended(UserAdmin):
     # fieldsets is for fields to be used when editing users in the admin page,
     # add_fieldsets is used for fields to be used when creating a user in the admin page.
 
+    ordering = ('username', )
+
     list_display = ('username', 'email')
 
     fieldsets = (
@@ -22,7 +24,15 @@ class UserAdminExtended(UserAdmin):
                 'Built-in',
                 # Fieldset options
                 {
-                    'fields': ('username', 'email', 'last_login', 'is_active', 'date_joined'),
+                    'fields': (
+                        'username',
+                        'email',
+                        'last_login',
+                        'is_active',
+                        'is_staff',
+                        'is_superuser',
+                        'date_joined'
+                    ),
                     'classes': ('wide', 'extrapretty')
                 }
             ),
@@ -48,8 +58,16 @@ class UserAdminExtended(UserAdmin):
                 None,
                 # Fieldset options
                 {
-                    'classes': ('wide',),
-                    'fields': ('username', 'email', 'password1', 'password2'),
+                    'classes': ('wide', 'extrapretty'),
+                    'fields': (
+                        'username',
+                        'email',
+                        'password1',
+                        'password2',
+                        'is_active',
+                        'is_staff',
+                        'is_superuser',
+                    ),
                 },
             ),
         )
@@ -57,7 +75,6 @@ class UserAdminExtended(UserAdmin):
     # Displayed but non-editable fields
     readonly_fields = (
         'last_login',
-        'is_active',
         'date_joined',
         'total_work_time',
         'total_study_time',
