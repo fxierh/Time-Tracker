@@ -36,7 +36,9 @@ class User(AbstractUser):
     All added fields (i.e. non-existent in the built-in models) are calculated automatically.
     """
 
-    # Make email field required and unique
+    # Make email field required.
+    # Note: here the unique constraint is enforced on the backend and the db level.
+    # However, a validation error will still be raised and shown in the frontend in case of duplicate.
     email = models.EmailField(max_length=254, unique=True)
 
     total_usable_time = models.PositiveBigIntegerField(default=0)
