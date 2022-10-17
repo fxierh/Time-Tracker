@@ -43,18 +43,6 @@ class RegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def clean(self):
-        # Extra validation ensuring username is unique
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise ValidationError("Username exists")
-
-        # Extra validation ensuring email is unique
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("Email exists")
-        return self.cleaned_data
-
     class Meta:
         fields = ('username', 'email', 'password1', 'password2')
         model = User
