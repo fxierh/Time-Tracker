@@ -57,7 +57,7 @@ jobs:
       env:
         ALLOWED_HOSTS: "*"
         SECRET_KEY: ${{ secrets.SECRET_KEY }}   # Use GitHub secret here
-        REDIS_LOCATION: redis://redis:6379
+        REDIS_LOCATION: redis://127.0.0.1:6379
         MYSQL_ROOT_PASSWORD: "root"
         MYSQL_HOST: "localhost"
         EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
