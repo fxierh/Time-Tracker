@@ -3,7 +3,6 @@ name: CD
 concurrency: production
 
 on:
-  # Triggered only when the CI workflow succeeded
   workflow_run:
     workflows: ["CI"]
     types:
@@ -11,6 +10,8 @@ on:
 
 jobs:
   deployment:
+    # Triggered only when the CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Deployment
     runs-on: ubuntu-22.04
     environment: production
