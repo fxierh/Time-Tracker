@@ -67,7 +67,6 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         DOCKER: "True"
       run: |
-#        cd time_tracker
         coverage run manage.py test
     - name: Get overall test coverage
       run: |
