@@ -17,6 +17,7 @@ omit =
 [report]
 show_missing = True
 ignore_errors = True
+fail_under = 80
 
 [html]
 skip_covered = True
