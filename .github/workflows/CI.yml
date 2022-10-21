@@ -44,7 +44,7 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r time_tracker/requirements.txt
@@ -53,7 +53,7 @@ jobs:
       run: |
         cd time_tracker
         flake8
-    - name: Run Tests
+    - name: Run tests
       env:
         ALLOWED_HOSTS: "*"
         SECRET_KEY: ${{ secrets.SECRET_KEY }}   # Use GitHub secret here
@@ -67,5 +67,8 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         DOCKER: "True"
       run: |
-        cd time_tracker
-        python manage.py test
+#        cd time_tracker
+        coverage run manage.py test
+    - name: Get overall test coverage
+      run: |
+        coverage report | grep TOTAL | awk '{print $6}'
