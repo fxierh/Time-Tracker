@@ -56,8 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # Django REST framework
-    'drf_spectacular',  # drf-spectacular (OpenAPI 3 schema generation for Django REST framework)
+    # 'rest_framework',  # Django REST framework
+    # 'drf_spectacular',  # drf-spectacular (OpenAPI 3 schema generation for Django REST framework)
 ]
 
 MIDDLEWARE = [
