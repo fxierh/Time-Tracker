@@ -42,10 +42,15 @@ services:
     image: mysql:8.0.30
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/general-log.log:/var/lib/mysql/general-log.log
     ports:
       - '3306:3306'  # So that data can be viewed in IDE
     env_file:
       - ./env/mysql.env
+    command:
+      --general-log=1 
+      --general-log-file=/var/lib/mysql/general-log.log
+      # Use --log-output='table' in order to log to mysql.general_log table
 
   redis:
     container_name: redis
