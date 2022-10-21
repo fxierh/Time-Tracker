@@ -20,10 +20,14 @@ dkim-dns-records.csv
 AWS_info.txt
 
 # Apache configuration files
-httpd/
+Legacy/httpd/
 
 # Certbot
 certbot/
 
 # Logging
 *.log
+
+# Coverage.py
+htmlcov/
+.coverage
