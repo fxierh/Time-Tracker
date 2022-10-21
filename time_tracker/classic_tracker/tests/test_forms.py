@@ -305,6 +305,22 @@ class TestDayCreateUpdateForm(TestCase):
         )
         self.assertFalse(form.is_valid(), 'This form should not be valid')
 
+    def test_non_optional_fields_unspecified(self):
+        """Test the form is valid when the non-optional fields are not specified."""
+
+        form = DayCreateUpdateForm(
+            user=self.user,
+            data={
+                'day': date(2022, 5, 6),
+                'stage': self.stage,
+                'start': time(11, 10),
+            }
+        )
+        self.assertTrue(form.is_valid(), 'This form should be valid')
+        day = form.save(commit=False)
+        day.user = self.user
+        day.save()
+
 
 class TestSessionCreateUpdateForm(TestCase):
     """Test the SessionCreateUpdate form. """
@@ -399,3 +415,19 @@ class TestSessionCreateUpdateForm(TestCase):
             }
         )
         self.assertFalse(form.is_valid(), 'This form should not be valid')
+
+    def test_non_optional_fields_unspecified(self):
+        """Test the form is valid when the non-optional fields are not specified."""
+
+        form = SessionCreateUpdateForm(
+            user=self.user,
+            data={
+                'day': self.day,
+                'subject': self.subject,
+                'start': time(22, 10),
+            }
+        )
+        self.assertTrue(form.is_valid(), 'This form should be valid')
+        session = form.save(commit=False)
+        session.user = self.user
+        session.save()

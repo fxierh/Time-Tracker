@@ -66,7 +66,7 @@ class DurationSelector(MultiWidget):
             minute = second // 60
             return [hour, minute]
 
-        return [None, None]
+        return [None, None]  # pragma: no cover
 
     def value_from_datadict(self, data, files, name):
         hour, minute = super().value_from_datadict(data, files, name)

@@ -40,9 +40,6 @@ class RegistrationForm(UserCreationForm):
         help_text=_("Enter the same password as before, for verification."),
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     class Meta:
         fields = ('username', 'email', 'password1', 'password2')
         model = User
@@ -56,8 +53,6 @@ class RegistrationForm(UserCreationForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     username = UsernameField(
         widget=forms.TextInput(attrs={
@@ -77,9 +72,6 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserUpdateForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     class Meta:
         model = User
@@ -107,9 +99,6 @@ class UserUpdateForm(ModelForm):
 
 
 class PasswordResetFormExtended(PasswordResetForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     email = forms.EmailField(
         label=_("Email"),
