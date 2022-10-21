@@ -1,0 +1,22 @@
+[run]
+branch = True
+source = .
+omit =
+    time_tracker/asgi.py
+    time_tracker/wsgi.py
+    time_tracker/environment_variables.py
+    time_tracker/settings.py
+    time_tracker/email_backend.py
+    classic_tracker/templatetags/filters.py
+    */migrations/*
+    */__init__.py
+    */apps.py
+    manage.py
+    gunicorn_conf.py
+
+[report]
+show_missing = True
+ignore_errors = True
+
+[html]
+skip_covered = True
