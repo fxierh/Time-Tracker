@@ -135,7 +135,7 @@ class Day(models.Model):
         # Get previous field values
         day_obj = None
         try:
-            day_obj = Day.objects.get(id=self.id)
+            day_obj = Day.objects.select_related('stage').get(id=self.id)
             prev_work_time = day_obj.worktime
             prev_study_time = day_obj.study_time
             prev_session_count = day_obj.session_count
@@ -234,7 +234,7 @@ class Session(models.Model):
         # Get previous field values
         session_obj = None
         try:
-            session_obj = Session.objects.get(id=self.id)
+            session_obj = Session.objects.select_related('subject').get(id=self.id)
             prev_duration = session_obj.duration
             prev_day = session_obj.day
             prev_subject = session_obj.subject
@@ -267,21 +267,24 @@ class Session(models.Model):
         self.day.save()
 
         # Update subject
+        # Note: model comparison is just pk comparison under the hood
         if self.subject == prev_subject or prev_subject is None:
             self.subject.total_study_time += self.duration - prev_duration
 
             # Increase session count only if the session is being created
             if session_obj is None:
                 self.subject.session_count += 1
+
+        # If user points existing session to another subject
         else:
             prev_subject.total_study_time -= prev_duration
             prev_subject.session_count -= 1
-            prev_subject.save()
+            prev_subject.save(save_session=True)
 
             self.subject.total_study_time += self.duration
             self.subject.session_count += 1
 
-        self.subject.save()
+        self.subject.save(save_session=True)
 
         super().save(*args, **kwargs)
 
@@ -411,13 +414,12 @@ class Subject(models.Model):
         return f"{self.name}"
 
     def save(self, *args, **kwargs):
-        # Update user if subject created
-        if not Subject.objects.filter(id=self.id).exists():
+        # Update user only if not saving session and is creating subject
+        if not kwargs.pop('save_session', False) and not Subject.objects.filter(id=self.id).exists():
             self.user.subject_count += 1
+            self.user.save()
 
         super().save(*args, **kwargs)
-
-        self.user.save()
 
     def delete(self, *args, **kwargs):
         # Update user
