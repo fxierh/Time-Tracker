@@ -48,8 +48,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Application definition
 INSTALLED_APPS = [
-    # Django debug toolbar
-    'debug_toolbar',
+    'debug_toolbar',  # Django debug toolbar
     'classic_tracker.apps.ClassicTrackerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',  # Django REST framework
+    'drf_spectacular',  # drf-spectacular (OpenAPI 3 schema generation for Django REST framework)
 ]
 
 MIDDLEWARE = [
@@ -102,14 +103,10 @@ DATABASES = {
         'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD'),
         'HOST': os.environ.get('MYSQL_HOST'),
         'PORT': '3306',
-        'OPTIONS': {
-           'init_command': 'SET default_storage_engine=INNODB; SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
-        },
+        'CONN_MAX_AGE': 60,  # Persistent connection
+        'CONN_HEALTH_CHECKS': True,
     }
 }
-# Persistent connection
-CONN_MAX_AGE = 60
-CONN_HEALTH_CHECKS = True
 
 # Cache
 CACHES = {
@@ -180,6 +177,14 @@ AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 AWS_REGION = os.environ.get('AWS_REGION')
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
 
+# Session
+SESSION_COOKIE_SECURE = True
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+# CSRF
+CSRF_TRUSTED_ORIGINS = ['https://*.timetracker.club']  # Trusted origins for unsafe requests (e.g. POST).
+CSRF_COOKIE_SECURE = True
+
 # Django debug toolbar settings
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
@@ -188,10 +193,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# Session
-SESSION_COOKIE_SECURE = True
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-
-# CSRF
-CSRF_TRUSTED_ORIGINS = ['https://*.timetracker.club']  # Trusted origins for unsafe requests (e.g. POST).
-CSRF_COOKIE_SECURE = True
+# Django REST framework
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
