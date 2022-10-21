@@ -7,8 +7,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.cache import caches
 from django.core.cache.utils import make_template_fragment_key
 from django.core.mail import send_mail
+from django.db import transaction
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views.generic import TemplateView, FormView, UpdateView, DeleteView
@@ -65,6 +67,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('thank_you')
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class UserDeleteView(LoginRequiredMixin, DeleteView):
     model = User
     template_name = 'user_confirm_delete.html'

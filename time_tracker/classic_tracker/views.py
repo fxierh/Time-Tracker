@@ -6,10 +6,12 @@ from typing import List, Optional
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import caches
 from django.core.cache.utils import make_template_fragment_key
+from django.db import transaction
 from django.db.models import Max, QuerySet, OuterRef, Subquery, F
 from django.db.models.functions import Coalesce
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView, DetailView
 
 from .forms import DayCreateUpdateForm, SessionCreateUpdateForm, StageCreateUpdateForm, SubjectCreateUpdateForm
@@ -171,6 +173,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class DayCreateView(LoginRequiredMixin, CreateView):
     model = Day
     form_class = DayCreateUpdateForm  # Customized form
@@ -216,6 +219,7 @@ class DayListView(LoginRequiredMixin, ListView):
         return queryset
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class DayUpdateView(LoginRequiredMixin, UpdateView):
     model = Day
     form_class = DayCreateUpdateForm
@@ -228,6 +232,7 @@ class DayUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class DayDeleteView(LoginRequiredMixin, DeleteView):
     model = Day
     success_url = reverse_lazy('thank_you')
@@ -250,6 +255,7 @@ class DayDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class SessionCreateView(LoginRequiredMixin, CreateView):
     model = Session
     form_class = SessionCreateUpdateForm
@@ -296,6 +302,7 @@ class SessionListView(LoginRequiredMixin, ListView):
             .order_by(sorting)
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class SessionUpdateView(LoginRequiredMixin, UpdateView):
     model = Session
     form_class = SessionCreateUpdateForm
@@ -309,6 +316,7 @@ class SessionUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class SessionDeleteView(LoginRequiredMixin, DeleteView):
     model = Session
     success_url = reverse_lazy('thank_you')
@@ -327,6 +335,7 @@ class SessionDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class StageCreateView(LoginRequiredMixin, CreateView):
     model = Stage
     form_class = StageCreateUpdateForm
@@ -407,6 +416,7 @@ class StageListView(LoginRequiredMixin, ListView):
         return redirect(reverse('classic_tracker:list_stage'))
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class StageUpdateView(LoginRequiredMixin, UpdateView):
     model = Stage
     form_class = StageCreateUpdateForm
@@ -419,6 +429,7 @@ class StageUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class StageDeleteView(LoginRequiredMixin, DeleteView):
     model = Stage
     success_url = reverse_lazy('thank_you')
@@ -482,6 +493,7 @@ class StageDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class SubjectCreateView(LoginRequiredMixin, CreateView):
     model = Subject
     form_class = SubjectCreateUpdateForm
@@ -531,6 +543,7 @@ class SubjectListView(LoginRequiredMixin, ListView):
         return redirect(reverse('classic_tracker:list_subject'))
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class SubjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Subject
     form_class = SubjectCreateUpdateForm
@@ -543,6 +556,7 @@ class SubjectUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+@method_decorator(transaction.atomic, name='dispatch')
 class SubjectDeleteView(LoginRequiredMixin, DeleteView):
     model = Subject
     success_url = reverse_lazy('thank_you')
