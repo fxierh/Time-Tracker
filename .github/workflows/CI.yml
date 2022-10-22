@@ -69,7 +69,12 @@ jobs:
       run: |
         cd time_tracker
         coverage run manage.py test
-    - name: Get overall test coverage
+    - name: Get test coverage badge
       run: |
         cd time_tracker
-        coverage report | grep TOTAL | awk '{print $6}'
+        coverage-badge -o coverage.svg
+    - name: Archive test coverage badge
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-badge
+        path: time_tracker/coverage.svg
