@@ -2,7 +2,7 @@
 
 ![CI Badge](https://github.com/fxie520/Time-Tracker/actions/workflows/CI.yml/badge.svg)
 ![CD Badge](https://github.com/fxie520/Time-Tracker/actions/workflows/CD.yml/badge.svg)
-![Test Coverage Badge](https://github.com/fxie520/Time-Tracker/time_tracker/coverage.svg)
+![Test Coverage Badge](https://github.com/fxie520/Time-Tracker/blob/main/time_tracker/coverage.svg)
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 **Checkout Time Tracker [here](https://www.timetracker.club) !**
