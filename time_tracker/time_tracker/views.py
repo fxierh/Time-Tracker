@@ -49,6 +49,9 @@ class AboutView(TemplateView):
             context['test_line_count'] = test_line_count
             context['test_case_count'] = test_case_count
 
+            with open(os.path.join(BASE_DIR, 'coverage.txt')) as f:
+                context['test_coverage'] = f.readline()
+
         return context
 
 
