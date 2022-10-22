@@ -69,12 +69,3 @@ jobs:
       run: |
         cd time_tracker
         coverage run manage.py test
-    - name: Get test coverage badge
-      run: |
-        cd time_tracker
-        coverage-badge -o coverage.svg
-    - name: Archive test coverage badge
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-badge
-        path: time_tracker/coverage.svg
