@@ -69,3 +69,4 @@ jobs:
       run: |
         cd time_tracker
         coverage run manage.py test
+        coverage report
