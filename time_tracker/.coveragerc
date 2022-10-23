@@ -11,6 +11,7 @@ omit =
     */migrations/*
     */__init__.py
     */apps.py
+    */urls.py
     manage.py
     gunicorn_conf.py
 
