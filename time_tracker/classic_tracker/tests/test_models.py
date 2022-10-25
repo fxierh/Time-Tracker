@@ -76,6 +76,7 @@ class TestUser(TestCase):
         user_obj = User.objects.get(username=TestUser.username)
 
         # Check user
+        self.assertEqual(str(user_obj), TestUser.username, 'Wrong str representation')
         self.assertTrue(user_obj.check_password(TestUser.password), 'Wrong password')
         self.assertEqual(user_obj.is_superuser, TestUser.is_superuser, 'Wrong is superuser')
         self.assertEqual(user_obj.username, TestUser.username, 'Wrong username')
@@ -232,6 +233,7 @@ class TestStage(TestCase):
         # Check stage
         # TODO: understand why the name and description fields are case sensitive
         #  even though the column collations are case insensitive
+        self.assertEqual(str(stage_obj), TestStage.name, 'Wrong str representation')
         self.assertEqual(stage_obj.name, TestStage.name, 'Wrong name')
         self.assertEqual(stage_obj.description, TestStage.description, 'Wrong description')
         self.assertEqual(stage_obj.day_count, TestStage.day_count, 'Wrong day count')
@@ -427,6 +429,7 @@ class TestSubject(TestCase):
         subject_obj = Subject.objects.get(name=TestSubject.name)
 
         # Check subject
+        self.assertEqual(str(subject_obj), TestSubject.name, 'Wrong str representation')
         self.assertEqual(subject_obj.name, TestSubject.name, 'Wrong name')
         self.assertEqual(subject_obj.description, TestSubject.description, 'Wrong description')
         self.assertEqual(subject_obj.session_count, TestSubject.session_count, 'Wrong session count')
@@ -572,6 +575,7 @@ class TestDay(TestCase):
         day_obj = Day.objects.get(day=TestDay.day)
 
         # Check day
+        self.assertEqual(str(day_obj), str(TestDay.day) + ' ' + TestDay.day.strftime('%A'), 'Wrong str representation')
         self.assertEqual(day_obj.day, TestDay.day, 'Wrong date')
         self.assertEqual(day_obj.day_of_week, TestDay.day.isoweekday(), 'Wrong day of week')
         self.assertEqual(day_obj.session_count, TestDay.session_count, 'Wrong session count')
@@ -1168,6 +1172,12 @@ class TestSession(TestCase):
         session_obj = Session.objects.get(start=TestSession.start)
 
         # Check session
+        self.assertEqual(
+            str(session_obj),
+            f'{session_obj.day}, subject {session_obj.subject}, '
+            f'from {self.start.strftime("%H:%M")} to {self.end.strftime("%H:%M")}',
+            'Wrong str representation'
+        )
         self.assertEqual(session_obj.start, TestSession.start, 'Wrong start time')
         self.assertEqual(session_obj.end, TestSession.end, 'Wrong end time')
         self.assertEqual(session_obj.end_next_day, TestSession.end_next_day, 'Wrong end next day')
