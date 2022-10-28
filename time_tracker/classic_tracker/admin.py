@@ -89,7 +89,7 @@ class UserAdminExtended(UserAdmin):
 
 @admin.register(Day)
 class DayAdmin(admin.ModelAdmin):
-    readonly_fields = ('user', 'day', 'day_of_week', 'session_count', 'usable_time', 'study_time', 'time_usage_ratio')
+    readonly_fields = ('day_of_week', 'session_count', 'usable_time', 'study_time', 'time_usage_ratio')
 
 
 @admin.register(Session)
