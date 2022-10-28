@@ -23,9 +23,9 @@
                     Number of lines of code
                 </button>
             </h2>
-            <div id="line-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="line-count-accordion-header">
+            <div id="line-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="line-count-accordion-header" style="width: 100%; overflow-x: auto;">
                 <div class="accordion-body">
-                    <table class="table table-borderless">
+                    <table class="table table-borderless text-nowrap">
                         <tbody>
                             <tr>
                                 <td class="w-50">Front-end</td>
@@ -49,35 +49,37 @@
             </div>
         </div>
 
-         <div class="accordion-item">
-             <h2 class="accordion-header" id="test-count-accordion-header">
-                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#test-count-accordion-body" aria-expanded="true" aria-controls="test-count-accordion-body">
-                    Unit & integration tests
-                 </button>
-             </h2>
-             <div id="test-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="test-count-accordion-header">
-                 <div class="accordion-body">
-                     <table class="table table-borderless">
-                        <tbody>
-                            <tr>
-                                <td class="w-50"># test cases</td>
-                                <td>{{ test_case_count }}</td>
-                            </tr>
-                            <tr>
-                                <td class="w-50">Test coverage</td>
-                                <td>{{ test_coverage }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                 </div>
-             </div>
-         </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="test-count-accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#test-count-accordion-body" aria-expanded="true" aria-controls="test-count-accordion-body">
+                   Unit & integration tests
+                </button>
+            </h2>
+            <div id="test-count-accordion-body" class="accordion-collapse collapse show" aria-labelledby="test-count-accordion-header" style="width: 100%; overflow-x: auto;">
+                <div class="accordion-body">
+                    <table class="table table-borderless text-nowrap">
+                       <tbody>
+                           <tr>
+                               <td class="w-50"># test cases</td>
+                               <td>{{ test_case_count }}</td>
+                           </tr>
+                           <tr>
+                               <td class="w-50">Coverage</td>
+                               <td>{{ test_coverage }}</td>
+                           </tr>
+                       </tbody>
+                   </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <h2>Tech stack</h2>
-    <table class="table table-borderless table-striped">
+    <div style="width: 100%; overflow-x: auto;">
+    <table class="table table-borderless table-striped text-nowrap">
         <tbody>
             <tr>
+                {# 50% width relative to the parent #}
                 <td class="w-50 align-middle">Front-end</td>
                 <td>
                     <img src="{% static 'classic_tracker/Icons/HTML5.svg' %}" alt="HTML5 icon" height="60" data-bs-toggle="tooltip" data-bs-title="HTML5">
@@ -118,6 +120,7 @@
             </tr>
         </tbody>
     </table>
+    </div>
 
     <script>
         {# Initialize Bootstrap tooltips #}
