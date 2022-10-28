@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /classic_tracker
+Disallow: /accounts
+Disallow: /update_user
+Disallow: /delete_user
+Disallow: /admin
