@@ -1,9 +1,12 @@
 from django.urls import path
 
-from .views import DashboardView, DayListView, DayUpdateView, DayDeleteView, DayCreateView, DayDetailView, \
-    SessionCreateView, SessionListView, SessionUpdateView, SessionDeleteView, SessionDetailView, StageCreateView, \
-    StageListView, StageUpdateView, StageDeleteView, SubjectCreateView, SubjectListView, \
-    SubjectUpdateView, SubjectDeleteView, SubjectDetailView, StageDetailView
+from .views import (
+    DashboardView,
+    DayListView, DayUpdateView, DayDeleteView, DayCreateView, DayDetailView,
+    SessionCreateView, SessionListView, SessionUpdateView, SessionDeleteView, SessionDetailView,
+    StageCreateView, StageListView, StageUpdateView, StageDeleteView, StageDetailView,
+    SubjectCreateView, SubjectListView, SubjectUpdateView, SubjectDeleteView, SubjectDetailView,
+)
 
 app_name = 'classic_tracker'
 
