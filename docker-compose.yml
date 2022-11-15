@@ -6,6 +6,7 @@ services:
 
   django:
     container_name: django
+    restart: always
     build:
       context: ./time_tracker  # . means directory where we run docker-compose command from
       dockerfile: Dockerfile
@@ -28,6 +29,10 @@ services:
         python3.10 manage.py wait_for_db --wait-interval 0.5
         python3.10 manage.py makemigrations
         python3.10 manage.py migrate
+        # coverage run manage.py test
+        # coverage report | grep TOTAL | awk '{print $$6}' > coverage.txt
+        # coverage html
+        # coverage-badge -f -o coverage.svg
         if ! [[ $$(mysql --user="$${MYSQL_USER}" --password="$${MYSQL_PASSWORD}" -h mysql -ss -e "select * from time_tracker_db.classic_tracker_user" 2> /dev/null) ]]; then
           echo "No user found in database, creating superuser"
           python3.10 manage.py createsuperuser --noinput
@@ -42,15 +47,15 @@ services:
     image: mysql:8.0.30
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./mysql/general-log.log:/var/lib/mysql/general-log.log
+#      - ./mysql/general-log.log:/var/lib/mysql/general-log.log
     ports:
       - '3306:3306'  # So that data can be viewed in IDE
     env_file:
       - ./env/mysql.env
-    command:
-      --general-log=1 
-      --general-log-file=/var/lib/mysql/general-log.log
-      # Use --log-output='table' in order to log to mysql.general_log table
+#    command:
+#      --general-log=1
+#      --general-log-file=/var/lib/mysql/general-log.log
+#      # Use --log-output='table' in order to log to mysql.general_log table
 
   redis:
     container_name: redis
@@ -63,6 +68,7 @@ services:
 
   nginx:
     container_name: nginx
+    restart: always
     build:
       context: ./nginx
       dockerfile: Dockerfile
