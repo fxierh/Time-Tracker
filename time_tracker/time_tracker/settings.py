@@ -49,15 +49,17 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # Application definition
 INSTALLED_APPS = [
     'debug_toolbar',  # Django debug toolbar
-    'classic_tracker.apps.ClassicTrackerConfig',
+    'classic_tracker.apps.ClassicTrackerConfig',  # The classic tracker app (for HTML web pages)
+    'api.apps.ApiConfig',  # The api app (for APIs)
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'rest_framework',  # Django REST framework
-    # 'drf_spectacular',  # drf-spectacular (OpenAPI 3 schema generation for Django REST framework)
+    'rest_framework',  # Django REST framework
+    'rest_framework.authtoken',  # Token authentication with DRF
+    'drf_spectacular',  # drf-spectacular (OpenAPI 3 schema generation for Django REST framework)
 ]
 
 MIDDLEWARE = [
@@ -194,6 +196,8 @@ INTERNAL_IPS = [
 ]
 
 # Django REST framework
-# REST_FRAMEWORK = {
-#     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}

@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.contrib.auth import views
 from django.urls import path, include
@@ -53,17 +54,19 @@ urlpatterns = [
     # accounts/reset/done/ [name='password_reset_complete']
     path('accounts/', include('django.contrib.auth.urls')),
 
-    path('thank_you/', ThankYouView.as_view(), name='thank_you'),
-
     path('registration/', RegistrationFormView.as_view(), name='registration'),
     path('update_user/<int:pk>/', UserUpdateView.as_view(), name='update_user'),
     path('delete_user/<int:pk>/', UserDeleteView.as_view(), name='delete_user'),
 
+    path('FAQS/', FAQsView.as_view(), name='FAQs'),
+    path('about/', AboutView.as_view(), name='about'),
+    path('thank_you/', ThankYouView.as_view(), name='thank_you'),
+
     # The classic tracker app
     path('classic_tracker/', include('classic_tracker.urls'), name='classic_tracker'),
 
-    path('FAQS/', FAQsView.as_view(), name='FAQs'),
-    path('about/', AboutView.as_view(), name='about'),
+    # The api app
+    path('api/', include('api.urls'), name='api'),
 
     # Django debug toolbar
     path('__debug__/', include('debug_toolbar.urls')),
